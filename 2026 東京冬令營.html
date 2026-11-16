@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>2026 東京冬令營</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a picture-book diary — paper page, crayon-outlined cards, one illustration per stop, fixed bottom nav. */
+:root{
+  --paper:#f5eee1;
+  --card:#fffaf1;
+  --ink:#4b3a30;
+  --ink-soft:#7d6a5c;
+  --accent:#d8613f;      /* persimmon */
+  --accent-2:#5b8a74;    /* pine */
+  --line:#d9cbb6;
+  --chip:#efe3cf;
+  --a-group:#d8613f;
+  --b-group:#4f7fa6;
+  /* illustration palette */
+  --sky:#cfe3e8; --cloud:#fffdf6; --snow:#ffffff; --sun:#f3c86a;
+  --red:#d8613f; --brick:#c26b4f; --green:#8db58a; --pine:#5b8a74; --yellow:#f3c86a;
+  --brown:#b98559; --wood:#d7a877; --pink:#f0b4a3; --blue:#7fa8c7; --stone:#bdb4a5;
+  --night:#36406a; --glow:#ffd98a; --ground:#e8dcc3; --water:#9cc4d4; --copper:#c8844c;
+  --font-body:"Roboto","Noto Sans TC","PingFang TC","Heiti TC","Microsoft JhengHei",sans-serif;
+  --font-display:"Roboto","Noto Sans TC","PingFang TC","Heiti TC","Microsoft JhengHei",sans-serif;
+  --radius:22px;
+  --shadow:0 3px 0 var(--line);
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1c2133; --card:#262c42; --ink:#efe6d6; --ink-soft:#b5ab9c; --accent:#f08b67; --accent-2:#86bba1;
+    --line:#3a4260; --chip:#323a55; --a-group:#f08b67; --b-group:#8db8dc;
+    --sky:#2d375a; --cloud:#46507a; --snow:#e3e8f2; --sun:#f6e3a8;
+    --red:#e07a5c; --brick:#c87a62; --green:#6f9c7e; --pine:#4f7d6b; --yellow:#f3cf7c;
+    --brown:#a8805e; --wood:#b78f68; --pink:#d79a8c; --blue:#7c9fc4; --stone:#8f8b8a;
+    --night:#1a1f36; --glow:#ffd98a; --ground:#3b4058; --water:#4a6f8c; --copper:#d0915a;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#1c2133; --card:#262c42; --ink:#efe6d6; --ink-soft:#b5ab9c; --accent:#f08b67; --accent-2:#86bba1;
+  --line:#3a4260; --chip:#323a55; --a-group:#f08b67; --b-group:#8db8dc;
+  --sky:#2d375a; --cloud:#46507a; --snow:#e3e8f2; --sun:#f6e3a8;
+  --red:#e07a5c; --brick:#c87a62; --green:#6f9c7e; --pine:#4f7d6b; --yellow:#f3cf7c;
+  --brown:#a8805e; --wood:#b78f68; --pink:#d79a8c; --blue:#7c9fc4; --stone:#8f8b8a;
+  --night:#1a1f36; --glow:#ffd98a; --ground:#3b4058; --water:#4a6f8c; --copper:#d0915a;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--ink) 7%, transparent) 1px, transparent 0);
+  background-size:14px 14px;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 20px calc(120px + env(safe-area-inset-bottom))}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.3}
+.num{font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:10px}
+
+/* top bar */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.04em}
+.brand-dot{width:30px;height:30px;border-radius:50%;background:var(--accent);display:grid;place-items:center;color:var(--card);border:2px solid var(--ink)}
+.theme-btn{display:flex;align-items:center;gap:8px;border:2px solid var(--ink);background:var(--card);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:14px;font-weight:500;box-shadow:var(--shadow)}
+.theme-btn svg{width:18px;height:18px}
+
+/* views */
+.view{display:none}
+.view.active{display:block}
+
+/* illustration base */
+.illus{display:block;width:100%;height:auto}
+.illus .ink{fill:none;stroke:var(--ink);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.illus .ink-f{stroke:var(--ink);stroke-width:2.6;stroke-linejoin:round;stroke-linecap:round}
+.illus .thin{stroke-width:1.8}
+.illus .dash{stroke-dasharray:6 7}
+.illus .nofill{fill:none}
+.c-sky{fill:var(--sky)}.c-cloud{fill:var(--cloud)}.c-snow{fill:var(--snow)}.c-sun{fill:var(--sun)}
+.c-red{fill:var(--red)}.c-brick{fill:var(--brick)}.c-green{fill:var(--green)}.c-pine{fill:var(--pine)}
+.c-yellow{fill:var(--yellow)}.c-brown{fill:var(--brown)}.c-wood{fill:var(--wood)}.c-pink{fill:var(--pink)}
+.c-blue{fill:var(--blue)}.c-stone{fill:var(--stone)}.c-night{fill:var(--night)}.c-glow{fill:var(--glow)}
+.c-ground{fill:var(--ground)}.c-water{fill:var(--water)}.c-copper{fill:var(--copper)}.c-card{fill:var(--card)}.c-ink{fill:var(--ink)}
+.c-paper{fill:var(--paper)}
+
+/* home */
+.hero{background:var(--card);border:2.5px solid var(--ink);border-radius:var(--radius);overflow:hidden;box-shadow:0 5px 0 var(--line);display:grid;grid-template-columns:1fr}
+.hero-art{border-bottom:2.5px solid var(--ink)}
+.hero-body{padding:22px 22px 24px;display:grid;gap:14px}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--accent)}
+.hero h1{font-size:clamp(30px,6vw,46px);font-weight:900;letter-spacing:.02em}
+.hero p{margin:0;color:var(--ink-soft);max-width:60ch}
+.count{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.count b{font-size:44px;font-weight:900;color:var(--accent);line-height:1}
+.count span{color:var(--ink-soft);font-size:15px}
+@media (min-width:860px){
+  .hero{grid-template-columns:1.25fr 1fr}
+  .hero-art{border-bottom:0;border-right:2.5px solid var(--ink)}
+  .hero-body{align-content:center;padding:32px}
+}
+
+.section-title{display:flex;align-items:center;gap:10px;margin:34px 0 14px;font-size:20px;font-weight:700}
+.section-title::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--accent-2);border:2px solid var(--ink);flex:none}
+
+.flights{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.flight{background:var(--card);border:2.5px solid var(--ink);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);display:grid;gap:8px}
+.flight-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14px;color:var(--ink-soft)}
+.flight-no{font-weight:900;font-size:18px;color:var(--ink);letter-spacing:.04em}
+.route{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px}
+.route .t{font-size:28px;font-weight:700;line-height:1}
+.route .p{font-size:13px;color:var(--ink-soft)}
+.route .line{height:0;border-top:2.5px dashed var(--ink-soft);position:relative}
+.route .line::after{content:"✈";position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-size:16px;color:var(--accent);background:var(--card);padding:0 4px}
+.note-small{font-size:13px;color:var(--ink-soft);margin:6px 0 0}
+
+.days-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.day-tile{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;text-align:left;background:var(--card);border:2.5px solid var(--ink);border-radius:18px;padding:10px 14px 10px 10px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s}
+.day-tile:hover{transform:translateY(-2px)}
+.day-tile .mini{border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--sky)}
+.day-tile .d{font-weight:900;font-size:17px}
+.day-tile .d small{font-weight:500;color:var(--ink-soft);font-size:13px;margin-left:4px}
+.day-tile .th{font-size:14px;color:var(--ink-soft);line-height:1.45}
+.stay-list{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.stay{background:var(--card);border:2.5px solid var(--ink);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow)}
+.stay b{display:block;font-size:16px}
+.stay span{font-size:14px;color:var(--ink-soft)}
+
+/* trip view */
+.day-picker{position:sticky;top:0;z-index:5;margin:0 -20px 18px;padding:10px 20px;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.day-picker::-webkit-scrollbar{display:none}
+.chip{flex:none;border:2px solid var(--ink);background:var(--card);border-radius:999px;padding:6px 14px;cursor:pointer;font-weight:700;font-size:14px;white-space:nowrap}
+.chip small{font-weight:500;color:var(--ink-soft);margin-left:3px}
+.chip[aria-pressed="true"]{background:var(--accent);color:#fff8ee;border-color:var(--ink)}
+.chip[aria-pressed="true"] small{color:#fff8ee}
+
+.day-head{background:var(--card);border:2.5px solid var(--ink);border-radius:var(--radius);overflow:hidden;box-shadow:0 5px 0 var(--line);display:grid;grid-template-columns:1fr;margin-bottom:18px}
+.day-head .art{border-bottom:2.5px solid var(--ink)}
+.day-head .body{padding:18px 20px;display:grid;gap:8px;align-content:center}
+.day-head h2{font-size:clamp(22px,4vw,30px);font-weight:900}
+.day-head .date{font-weight:700;color:var(--accent);letter-spacing:.06em;font-size:14px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;background:var(--chip);border-radius:999px;padding:3px 11px;font-weight:500}
+.tag.spot{background:color-mix(in srgb,var(--accent-2) 22%,var(--card));color:var(--ink)}
+.tag.opt{background:color-mix(in srgb,var(--yellow) 35%,var(--card))}
+.tag.a{background:color-mix(in srgb,var(--a-group) 22%,var(--card))}
+.tag.b{background:color-mix(in srgb,var(--b-group) 22%,var(--card))}
+.callout{border:2px dashed var(--ink-soft);border-radius:16px;padding:12px 16px;font-size:14.5px;color:var(--ink);background:color-mix(in srgb,var(--card) 60%,transparent);margin:0 0 18px;max-width:75ch}
+.callout b{color:var(--accent)}
+@media (min-width:860px){
+  .day-head{grid-template-columns:1.1fr 1fr}
+  .day-head .art{border-bottom:0;border-right:2.5px solid var(--ink)}
+  .day-head .body{padding:24px 28px}
+}
+
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.card{background:var(--card);border:2.5px solid var(--ink);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);display:grid;grid-template-rows:auto 1fr;position:relative}
+.card .art{border-bottom:2.5px solid var(--ink);background:var(--sky)}
+.card .body{padding:14px 16px 16px;display:grid;gap:6px;align-content:start}
+.time{position:absolute;top:10px;left:10px;background:var(--card);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-weight:700;font-size:14px}
+.card h3{font-size:18px;font-weight:700}
+.card p{margin:0;font-size:14.5px;color:var(--ink-soft)}
+.card .meta{margin-top:4px}
+
+.groups{display:grid;gap:22px;grid-template-columns:1fr}
+.group-col h3.gh{display:flex;align-items:center;gap:10px;font-size:19px;margin:0 0 12px}
+.gh .pill{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;border:2px solid var(--ink);color:#fff8ee;font-weight:900}
+.group-col[data-g="A"] .pill{background:var(--a-group)}
+.group-col[data-g="B"] .pill{background:var(--b-group)}
+.group-col[data-g="A"] .card{border-top-width:7px;border-top-color:var(--a-group)}
+.group-col[data-g="B"] .card{border-top-width:7px;border-top-color:var(--b-group)}
+.group-col .cards{grid-template-columns:1fr}
+.seg{display:flex;border:2px solid var(--ink);border-radius:999px;overflow:hidden;background:var(--card);margin:0 0 16px;width:max-content}
+.seg button{border:0;background:transparent;padding:7px 18px;cursor:pointer;font-weight:700;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+@media (max-width:859px){
+  .groups[data-show="A"] .group-col[data-g="B"]{display:none}
+  .groups[data-show="B"] .group-col[data-g="A"]{display:none}
+}
+@media (min-width:860px){
+  .groups{grid-template-columns:1fr 1fr}
+  .seg{display:none}
+}
+
+/* checklists */
+.list-head{display:grid;gap:10px;margin-bottom:18px}
+.list-head h2{font-size:clamp(24px,4vw,32px);font-weight:900}
+.list-head p{margin:0;color:var(--ink-soft);max-width:65ch}
+.progress{display:flex;align-items:center;gap:12px}
+.bar{flex:1;height:16px;border:2px solid var(--ink);border-radius:999px;background:var(--card);overflow:hidden;max-width:420px}
+.bar i{display:block;height:100%;background:var(--accent-2);border-right:2px solid var(--ink);width:0;transition:width .3s}
+.progress b{font-size:15px}
+.checks{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.check{display:grid;grid-template-columns:auto 56px 1fr;gap:12px;align-items:center;background:var(--card);border:2.5px solid var(--ink);border-radius:18px;padding:10px 14px 10px 12px;cursor:pointer;box-shadow:var(--shadow)}
+.check input{position:absolute;opacity:0;pointer-events:none}
+.box{width:26px;height:26px;border:2.5px solid var(--ink);border-radius:8px;display:grid;place-items:center;background:var(--paper)}
+.box svg{width:18px;height:18px;opacity:0;transition:opacity .15s}
+.check input:checked ~ .box{background:var(--accent-2)}
+.check input:checked ~ .box svg{opacity:1}
+.check input:focus-visible ~ .box{outline:3px solid var(--accent);outline-offset:2px}
+.check .thumb{width:56px;height:40px;border:2px solid var(--ink);border-radius:10px;overflow:hidden;background:var(--sky)}
+.check .txt b{display:block;font-size:15.5px;line-height:1.35}
+.check .txt span{font-size:13px;color:var(--ink-soft)}
+.check.done .txt b{text-decoration:line-through;text-decoration-thickness:2px;color:var(--ink-soft)}
+.check.noimg{grid-template-columns:auto 1fr}
+.reset{margin-top:16px;border:2px solid var(--ink-soft);background:transparent;border-radius:999px;padding:6px 14px;cursor:pointer;font-size:13px;color:var(--ink-soft)}
+
+/* bottom nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:0 12px calc(10px + env(safe-area-inset-bottom));pointer-events:none}
+.nav-inner{pointer-events:auto;max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:var(--card);border:2.5px solid var(--ink);border-radius:26px;padding:6px;box-shadow:0 4px 0 var(--line),0 10px 30px color-mix(in srgb,var(--ink) 18%,transparent)}
+.nav a{display:grid;justify-items:center;gap:2px;padding:6px 4px;border-radius:20px;text-decoration:none;color:var(--ink-soft);font-size:12px;font-weight:700}
+.nav a svg{width:24px;height:24px}
+.nav a .ico{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.nav a[aria-current="page"]{background:var(--accent);color:#fff8ee}
+
+.foot{margin-top:30px;font-size:13px;color:var(--ink-soft)}
+@media (max-width:420px){
+  .wrap{padding-left:16px;padding-right:16px}
+  .day-picker{margin:0 -16px 18px;padding:10px 16px}
+  .cards{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="wob" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/>
+  </filter>
+</svg>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand"><span class="brand-dot" aria-hidden="true">冬</span><span>2026 東京冬令營</span></div>
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="切換深色或淺色模式">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path id="themeIco" fill="currentColor" d=""/></svg>
+      <span id="themeLabel">深色</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="view" id="view-home" aria-label="首頁"></section>
+    <section class="view" id="view-trip" aria-label="行程"></section>
+    <section class="view" id="view-spots" aria-label="行程確認清單"></section>
+    <section class="view" id="view-prep" aria-label="出發前確認清單"></section>
+  </main>
+</div>
+
+<nav class="nav" aria-label="主選單">
+  <div class="nav-inner">
+    <a href="#home" data-v="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ico" d="M3 11 12 4l9 7"/><path class="ico" d="M5.5 9.5V20h13V9.5"/><path class="ico" d="M10 20v-5h4v5"/></svg>首頁</a>
+    <a href="#trip" data-v="trip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="ico" x="3.5" y="5" width="17" height="15" rx="3"/><path class="ico" d="M3.5 10h17M8 3v4M16 3v4"/></svg>行程</a>
+    <a href="#spots" data-v="spots"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="ico" d="M12 21s-6.5-6.2-6.5-11a6.5 6.5 0 0 1 13 0c0 4.8-6.5 11-6.5 11z"/><path class="ico" d="m9.5 10 2 2 3.5-3.5"/></svg>行程確認</a>
+    <a href="#prep" data-v="prep"><svg viewBox="0 0 24 24" aria-hidden="true"><rect class="ico" x="6" y="7" width="12" height="14" rx="2.5"/><path class="ico" d="M9.5 7V4.5h5V7M9.5 12h5M9.5 16h3"/></svg>出發前</a>
+  </div>
+</nav>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- storage (optional, per viewer) ---------- */
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem("twc26:"+k); return v===null? d : JSON.parse(v);}catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem("twc26:"+k, JSON.stringify(v)); }catch(e){} }
+};
+
+/* ---------- illustrations (hand-drawn picture-book style) ---------- */
+const W = (inner, extra) => `<svg class="illus" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g filter="url(#wob)">${inner}</g>${extra||""}</svg>`;
+const sky = (c) => `<rect class="${c||"c-sky"}" x="-10" y="-10" width="340" height="200"/>`;
+const cloud = (x,y,s) => `<g transform="translate(${x} ${y}) scale(${s})"><path class="c-cloud ink-f thin" d="M4 30c-6 0-8-12 2-14 0-10 12-14 18-8 4-10 22-10 24 2 10-2 16 8 10 14 6 2 4 8-2 8H8c-4 0-6-1-4-2z"/></g>`;
+const sun = (x,y,r) => `<circle class="c-sun ink-f thin" cx="${x}" cy="${y}" r="${r}"/>`;
+const flakes = (pts) => pts.map(p=>`<circle class="c-snow" cx="${p[0]}" cy="${p[1]}" r="${p[2]||2.4}"/>`).join("");
+const SNOW = flakes([[30,30],[70,60,2],[120,22],[170,48,2],[230,26],[280,58,2],[300,20],[60,100,2],[150,90,1.8],[260,96,2]]);
+const pineTree = (x,y,s,cls) => `<g transform="translate(${x} ${y}) scale(${s})"><path class="${cls||"c-pine"} ink-f thin" d="M0 0 L-16 26 H-7 L-20 48 H-6 L-22 70 H22 L6 48 H20 L7 26 H16Z"/><path class="c-snow" d="M0 2 L-8 15 H8Z"/><rect class="c-brown ink-f thin" x="-4" y="70" width="8" height="12"/></g>`;
+const roundTree = (x,y,s,cls) => `<g transform="translate(${x} ${y}) scale(${s})"><rect class="c-brown ink-f thin" x="-4" y="10" width="8" height="26"/><circle class="${cls||"c-green"} ink-f thin" cx="0" cy="0" r="20"/></g>`;
+const hills = (cls) => `<path class="${cls||"c-ground"} ink-f" d="M-10 150 Q60 120 130 140 T260 132 T340 140 V200 H-10Z"/>`;
+
+const ART = {
+  plane: () => W(sky()+cloud(20,30,1.1)+cloud(220,96,0.9)+sun(272,40,18)+
+    `<path class="ink dash" d="M30 132 Q90 120 130 112"/>`+
+    `<path class="c-card ink-f" d="M120 110 L230 74 Q262 64 266 78 Q268 90 238 98 L132 128 Q112 132 120 110Z"/>`+
+    `<path class="c-red ink-f" d="M176 98 L150 146 L170 146 L214 92Z"/>`+
+    `<path class="c-red ink-f" d="M132 112 L118 82 L132 80 L150 106Z"/>`+
+    `<circle class="c-blue" cx="214" cy="86" r="4"/><circle class="c-blue" cx="200" cy="91" r="4"/><circle class="c-blue" cx="186" cy="96" r="4"/><circle class="c-blue" cx="242" cy="80" r="5"/>`),
+  airport: () => W(sky()+cloud(200,20,0.9)+hills()+
+    `<rect class="c-stone ink-f" x="40" y="58" width="22" height="80"/><path class="c-blue ink-f" d="M28 40 H74 L68 62 H34Z"/>`+
+    `<path class="c-card ink-f" d="M90 128 H300 V146 H90Z"/><path class="ink thin" d="M100 128 V146 M130 128 V146 M160 128 V146 M190 128 V146 M220 128 V146 M250 128 V146 M280 128 V146"/>`+
+    `<path class="c-card ink-f" d="M150 96 L250 86 Q276 84 276 94 Q276 104 250 104 L160 108Z"/><path class="c-red ink-f" d="M160 98 L144 70 L158 70 L176 96Z"/><path class="c-red ink-f" d="M206 100 L190 120 L204 120 L228 100Z"/>`+
+    `<rect class="c-yellow ink-f" x="96" y="104" width="26" height="24" rx="5"/><path class="ink thin" d="M104 104 V98 H114 V104"/>`),
+  train: () => W(sky()+cloud(210,22,0.8)+
+    `<path class="c-stone ink-f thin" d="M10 120 V70 H40 V120 M44 120 V50 H70 V120 M250 120 V60 H280 V120 M284 120 V80 H310 V120"/>`+
+    `<rect class="c-ground" x="-10" y="138" width="340" height="60"/><path class="ink" d="M-10 150 H330 M-10 160 H330"/><path class="ink thin" d="M10 150 V160 M40 150 V160 M70 150 V160 M100 150 V160 M130 150 V160 M160 150 V160 M190 150 V160 M220 150 V160 M250 150 V160 M280 150 V160 M310 150 V160"/>`+
+    `<path class="c-card ink-f" d="M40 92 H250 Q282 92 288 120 L292 142 H40Z"/><path class="c-blue ink-f" d="M40 128 H291 V136 H40Z"/>`+
+    `<rect class="c-sky ink-f thin" x="56" y="102" width="34" height="18" rx="4"/><rect class="c-sky ink-f thin" x="102" y="102" width="34" height="18" rx="4"/><rect class="c-sky ink-f thin" x="148" y="102" width="34" height="18" rx="4"/><rect class="c-sky ink-f thin" x="194" y="102" width="34" height="18" rx="4"/><path class="c-sky ink-f thin" d="M244 102 H262 Q274 104 278 120 H244Z"/>`+
+    `<circle class="c-ink" cx="80" cy="146" r="6"/><circle class="c-ink" cx="120" cy="146" r="6"/><circle class="c-ink" cx="220" cy="146" r="6"/><circle class="c-ink" cx="260" cy="146" r="6"/>`),
+  shinkansen: () => W(sky()+
+    `<path class="c-stone ink-f" d="M-10 130 L70 54 L120 96 L180 40 L260 112 L330 70 V150 H-10Z"/><path class="c-snow ink-f thin" d="M58 66 L70 54 L84 66 L76 70 L70 64 L64 70Z M166 54 L180 40 L196 54 L188 58 L180 52 L172 58Z"/>`+
+    pineTree(36,92,0.6)+pineTree(292,94,0.6)+
+    `<rect class="c-ground" x="-10" y="140" width="340" height="60"/><path class="ink" d="M-10 156 H330"/>`+
+    `<path class="c-card ink-f" d="M20 112 H200 Q270 112 306 140 Q310 146 300 148 H20Z"/><path class="c-blue ink-f" d="M20 136 H302 Q306 141 300 146 H20Z"/><path class="c-yellow ink-f thin" d="M20 130 H290 L296 135 H20Z"/>`+
+    `<path class="c-sky ink-f thin" d="M220 118 Q256 120 276 132 H226Z"/>`+
+    `<rect class="c-sky ink-f thin" x="34" y="118" width="20" height="10" rx="3"/><rect class="c-sky ink-f thin" x="64" y="118" width="20" height="10" rx="3"/><rect class="c-sky ink-f thin" x="94" y="118" width="20" height="10" rx="3"/><rect class="c-sky ink-f thin" x="124" y="118" width="20" height="10" rx="3"/><rect class="c-sky ink-f thin" x="154" y="118" width="20" height="10" rx="3"/><rect class="c-sky ink-f thin" x="184" y="118" width="20" height="10" rx="3"/>`+SNOW),
+  hotel: () => W(sky("c-night")+
+    `<circle class="c-sun" cx="262" cy="38" r="16"/><circle class="c-night" cx="270" cy="33" r="14"/>`+
+    flakes([[40,24,1.6],[90,44,1.4],[150,20,1.6],[210,52,1.4],[300,70,1.6]])+
+    `<rect class="c-card ink-f" x="90" y="34" width="120" height="132" rx="4"/><rect class="c-stone ink-f thin" x="82" y="28" width="136" height="12" rx="3"/>`+
+    [52,76,100,124].map(y=>[104,132,160,188].map(x=>`<rect class="${(x+y)%3?"c-glow":"c-sky"} ink-f thin" x="${x-6}" y="${y}" width="16" height="14" rx="2"/>`).join("")).join("")+
+    `<path class="c-red ink-f" d="M134 166 V146 Q150 136 166 146 V166Z"/>`+
+    `<rect class="c-ground" x="-10" y="164" width="340" height="30"/>`+roundTree(52,130,1,"c-pine")+roundTree(260,132,0.9,"c-pine")),
+  ginza: () => W(sky("c-night")+flakes([[30,20,1.6],[120,30,1.4],[290,26,1.6]])+
+    `<path class="c-stone ink-f" d="M100 166 V74 Q100 60 114 58 H206 Q220 60 220 74 V166Z"/>`+
+    `<rect class="c-stone ink-f" x="146" y="22" width="28" height="38"/><path class="c-pine ink-f" d="M142 24 Q160 4 178 24Z"/>`+
+    `<circle class="c-card ink-f thin" cx="160" cy="40" r="10"/><path class="ink thin" d="M160 34 V40 L165 43"/>`+
+    [80,104,128].map(y=>[118,142,166,190].map(x=>`<rect class="c-glow ink-f thin" x="${x-6}" y="${y}" width="14" height="16" rx="2"/>`).join("")).join("")+
+    `<rect class="c-brick ink-f" x="16" y="96" width="70" height="70"/><rect class="c-glow ink-f thin" x="28" y="110" width="18" height="18"/><rect class="c-glow ink-f thin" x="56" y="110" width="18" height="18"/>`+
+    `<rect class="c-blue ink-f" x="234" y="86" width="74" height="80"/><rect class="c-glow ink-f thin" x="246" y="100" width="18" height="18"/><rect class="c-glow ink-f thin" x="276" y="100" width="18" height="18"/>`+
+    `<rect class="c-ground" x="-10" y="164" width="340" height="30"/><circle class="c-glow" cx="40" cy="160" r="3"/><circle class="c-glow" cx="280" cy="160" r="3"/>`),
+  stationery: () => W(sky("c-paper")+
+    `<rect class="c-blue ink-f" x="54" y="36" width="120" height="120" rx="8" transform="rotate(-6 114 96)"/><path class="ink thin" d="M70 70 H150 M70 90 H150 M70 110 H130" transform="rotate(-6 114 96)"/>`+
+    `<rect class="c-card ink-f" x="146" y="44" width="110" height="110" rx="6" transform="rotate(5 200 100)"/><path class="ink thin" d="M162 72 H240 M162 92 H240 M162 112 H220 M162 132 H200" transform="rotate(5 200 100)"/>`+
+    `<g transform="rotate(-30 240 120)"><rect class="c-yellow ink-f" x="190" y="112" width="90" height="16"/><path class="c-wood ink-f" d="M280 112 L300 120 L280 128Z"/><path class="c-ink" d="M294 118 L300 120 L294 122Z"/><rect class="c-pink ink-f" x="180" y="112" width="12" height="16" rx="3"/></g>`+
+    `<g transform="rotate(20 90 140)"><rect class="c-red ink-f" x="40" y="132" width="80" height="14" rx="7"/><path class="c-stone ink-f" d="M120 132 L140 139 L120 146Z"/></g>`),
+  tokyostation: () => W(sky()+cloud(30,14,0.8)+cloud(236,10,0.7)+
+    `<rect class="c-brick ink-f" x="10" y="86" width="300" height="70"/>`+
+    `<path class="c-stone ink-f" d="M40 86 V66 Q66 36 92 66 V86Z"/><path class="c-stone ink-f" d="M228 86 V66 Q254 36 280 66 V86Z"/><rect class="c-brick ink-f" x="132" y="70" width="56" height="16"/>`+
+    `<path class="ink" d="M10 104 H310 M10 128 H310"/>`+
+    [28,52,76,100,124,148,172,196,220,244,268,292].map(x=>`<rect class="c-card ink-f thin" x="${x-5}" y="110" width="10" height="13" rx="2"/><rect class="c-card ink-f thin" x="${x-5}" y="134" width="10" height="13" rx="2"/>`).join("")+
+    `<rect class="c-ground" x="-10" y="154" width="340" height="40"/><path class="c-pine ink-f thin" d="M66 34 V30 M254 34 V30"/>`),
+  bus: () => W(sky()+cloud(30,20,0.8)+hills("c-ground")+pineTree(270,70,0.7)+pineTree(40,72,0.6)+
+    `<path class="c-card ink-f" d="M70 84 H236 Q252 84 254 100 L256 140 H70Z"/><rect class="c-green ink-f" x="70" y="124" width="186" height="12"/>`+
+    `<rect class="c-sky ink-f thin" x="84" y="94" width="30" height="22" rx="3"/><rect class="c-sky ink-f thin" x="124" y="94" width="30" height="22" rx="3"/><rect class="c-sky ink-f thin" x="164" y="94" width="30" height="22" rx="3"/><path class="c-sky ink-f thin" d="M206 94 H240 Q248 96 250 116 H206Z"/>`+
+    `<circle class="c-ink" cx="104" cy="142" r="9"/><circle class="c-ink" cx="222" cy="142" r="9"/><circle class="c-stone" cx="104" cy="142" r="3"/><circle class="c-stone" cx="222" cy="142" r="3"/>`+SNOW),
+  applepie: () => W(sky("c-pink")+
+    `<ellipse class="c-card ink-f" cx="150" cy="122" rx="120" ry="36"/>`+
+    `<ellipse class="c-wood ink-f" cx="150" cy="110" rx="96" ry="30"/>`+
+    `<path class="ink thin" d="M80 98 L210 130 M100 92 L230 120 M120 88 L238 110 M70 110 L180 136 M80 124 L220 94 M100 132 L236 104 M120 136 L232 116 M74 116 L196 88"/>`+
+    `<circle class="c-red ink-f" cx="268" cy="62" r="24"/><path class="ink" d="M268 38 Q270 28 276 24"/><path class="c-green ink-f thin" d="M272 30 Q284 22 290 32 Q280 36 272 30Z"/>`+
+    `<circle class="c-yellow ink-f" cx="44" cy="58" r="20"/><path class="ink" d="M44 38 Q46 30 50 28"/>`),
+  bread: () => W(sky("c-yellow")+
+    `<path class="c-brown ink-f" d="M40 140 Q30 110 70 104 H250 Q290 110 280 140 Z"/><path class="ink thin" d="M60 124 H260 M70 112 V140 M110 108 V142 M150 108 V142 M190 108 V142 M230 108 V142"/>`+
+    `<g transform="rotate(-24 150 80)"><rect class="c-wood ink-f" x="70" y="66" width="170" height="34" rx="17"/><path class="ink thin" d="M100 72 L112 94 M130 70 L142 96 M160 70 L172 96 M190 70 L202 94"/></g>`+
+    `<path class="c-wood ink-f" d="M200 100 Q230 60 262 96 Q246 106 232 104 Q216 108 200 100Z"/><path class="ink thin" d="M216 98 Q224 80 232 100 M232 100 Q240 82 250 98"/>`),
+  street: () => W(sky()+cloud(230,14,0.8)+
+    pineTree(26,64,0.75)+pineTree(296,62,0.8)+
+    `<path class="c-wood ink-f" d="M50 160 V100 L80 74 L110 100 V160Z"/><rect class="c-glow ink-f thin" x="66" y="112" width="28" height="22"/>`+
+    `<path class="c-card ink-f" d="M116 160 V92 L152 64 L188 92 V160Z"/><path class="c-red ink-f thin" d="M116 96 H188 V106 H116Z"/><rect class="c-glow ink-f thin" x="130" y="116" width="44" height="26"/>`+
+    `<path class="c-blue ink-f" d="M194 160 V104 L224 80 L254 104 V160Z"/><rect class="c-glow ink-f thin" x="208" y="116" width="32" height="22"/>`+
+    `<path class="c-snow ink-f thin" d="M50 100 L80 74 L110 100 L104 102 L80 82 L56 102Z M116 92 L152 64 L188 92 L180 94 L152 72 L124 94Z M194 104 L224 80 L254 104 L248 106 L224 88 L200 106Z"/>`+
+    `<rect class="c-snow" x="-10" y="158" width="340" height="40"/><path class="ink thin" d="M-10 160 H330"/>`+SNOW),
+  stonechurch: () => W(sky()+
+    pineTree(30,66,0.8)+pineTree(70,80,0.6)+pineTree(292,70,0.8)+
+    [0,1,2,3].map(i=>`<path class="c-stone ink-f" d="M${86+i*14} 160 Q${160} ${44+i*18} ${234-i*14} 160Z"/>`).join("")+
+    `<path class="c-sky ink-f thin" d="M140 160 Q160 116 180 160Z"/>`+
+    `<rect class="c-ground" x="-10" y="158" width="340" height="40"/>`+
+    flakes([[30,24],[110,30,2],[200,20],[256,40,2]])),
+  woodchurch: () => W(sky("c-night")+flakes([[30,20,1.6],[90,40,1.4],[230,24,1.6],[300,46,1.4]])+
+    pineTree(36,70,0.8,"c-pine")+pineTree(286,70,0.8,"c-pine")+
+    `<path class="c-wood ink-f" d="M110 160 V90 L160 40 L210 90 V160Z"/><path class="ink thin" d="M120 104 H200 M120 120 H200 M120 136 H200"/>`+
+    `<path class="c-glow ink-f thin" d="M146 160 V124 Q160 112 174 124 V160Z"/><circle class="c-glow ink-f thin" cx="160" cy="80" r="10"/>`+
+    `<path class="c-snow ink-f thin" d="M106 92 L160 38 L214 92 L206 94 L160 48 L114 94Z"/>`+
+    `<rect class="c-snow" x="-10" y="158" width="340" height="40"/>`+
+    [60,84,236,260].map(x=>`<path class="ink thin" d="M${x} 158 V146"/><rect class="c-glow ink-f thin" x="${x-6}" y="136" width="12" height="12" rx="3"/>`).join("")),
+  harunire: () => W(sky("c-night")+flakes([[40,20,1.5],[140,16,1.4],[260,24,1.5]])+
+    `<path class="ink thin" d="M10 40 Q80 64 160 44 Q240 24 310 44"/>`+
+    [30,60,90,120,150,180,210,240,270,300].map((x,i)=>`<circle class="c-glow" cx="${x}" cy="${44+Math.sin(i/1.6)*10}" r="4"/>`).join("")+
+    `<path class="c-wood ink-f" d="M20 120 V80 L56 62 L92 80 V120Z"/><rect class="c-glow ink-f thin" x="38" y="88" width="36" height="20"/>`+
+    `<path class="c-wood ink-f" d="M206 120 V78 L246 58 L286 78 V120Z"/><rect class="c-glow ink-f thin" x="224" y="88" width="44" height="20"/>`+
+    `<path class="c-brown ink-f" d="M-10 120 H330 V132 H-10Z"/><path class="ink thin" d="M20 120 V132 M60 120 V132 M100 120 V132 M140 120 V132 M180 120 V132 M220 120 V132 M260 120 V132 M300 120 V132"/>`+
+    `<path class="c-water ink-f" d="M-10 140 Q80 132 160 142 T330 140 V200 H-10Z"/><path class="ink thin" d="M40 156 q10 -4 20 0 M140 166 q10 -4 20 0 M240 156 q10 -4 20 0"/>`+
+    roundTree(126,100,0.8,"c-pine")+roundTree(166,96,0.9,"c-pine")),
+  firepit: () => W(sky("c-night")+flakes([[30,26,1.6],[120,16,1.4],[220,30,1.6],[290,14,1.4]])+
+    pineTree(36,52,0.95)+pineTree(284,50,0.95)+pineTree(84,74,0.6)+pineTree(240,72,0.6)+
+    `<rect class="c-ground" x="-10" y="140" width="340" height="60"/>`+
+    `<ellipse class="c-stone ink-f" cx="160" cy="146" rx="52" ry="12"/>`+
+    `<path class="c-red ink-f" d="M136 142 Q132 112 152 100 Q148 118 160 120 Q160 96 176 88 Q170 114 186 126 Q188 138 180 142Z"/><path class="c-glow" d="M150 142 Q148 126 160 118 Q166 130 172 128 Q174 138 168 142Z"/>`+
+    `<path class="c-blue ink-f" d="M58 152 V122 Q58 112 70 112 H94 V152Z"/><path class="c-blue ink-f" d="M262 152 V122 Q262 112 250 112 H226 V152Z"/>`),
+  morning: () => W(sky("c-paper")+
+    `<rect class="c-sky ink-f" x="40" y="22" width="150" height="110" rx="6"/><path class="ink" d="M115 22 V132 M40 77 H190"/>`+
+    pineTree(76,44,0.45)+pineTree(152,40,0.5)+pineTree(98,86,0.38)+
+    flakes([[60,34,1.8],[140,30,1.6],[170,100,1.8],[60,110,1.6]])+
+    `<path class="c-wood ink-f" d="M-10 140 H330 V200 H-10Z"/>`+
+    `<path class="c-card ink-f" d="M220 102 H280 V140 Q280 156 264 156 H236 Q220 156 220 140Z"/><path class="ink" d="M280 112 Q298 112 296 126 Q294 138 280 136"/>`+
+    `<path class="ink thin" d="M236 92 q-6 -10 0 -18 q6 -8 0 -16 M252 92 q-6 -10 0 -18 q6 -8 0 -16 M268 92 q-6 -10 0 -18"/>`),
+  suitcase: () => W(sky()+cloud(230,20,0.9)+hills()+
+    `<rect class="c-red ink-f" x="96" y="60" width="96" height="96" rx="14"/><path class="ink" d="M124 60 V44 H164 V60 M110 84 H178 M110 108 H178 M110 132 H178"/>`+
+    `<circle class="c-ink" cx="114" cy="160" r="6"/><circle class="c-ink" cx="174" cy="160" r="6"/>`+
+    `<rect class="c-yellow ink-f" x="200" y="96" width="60" height="60" rx="10"/><path class="ink" d="M214 96 V84 H246 V96"/>`+
+    `<rect class="c-card ink-f thin" x="140" y="70" width="34" height="20" rx="3" transform="rotate(8 157 80)"/>`),
+  shopping: () => W(sky()+cloud(20,16,0.8)+
+    `<rect class="c-brick ink-f" x="-10" y="40" width="340" height="30"/>`+[20,60,100,140,180,220,260,300].map(x=>`<rect class="c-card ink-f thin" x="${x-6}" y="48" width="12" height="14" rx="2"/>`).join("")+
+    `<rect class="c-ground" x="-10" y="150" width="340" height="40"/>`+
+    `<path class="c-pink ink-f" d="M70 92 H140 L146 160 H64Z"/><path class="ink" d="M90 92 Q90 74 105 74 Q120 74 120 92"/>`+
+    `<path class="c-card ink-f" d="M150 80 H220 L226 160 H144Z"/><path class="ink" d="M170 80 Q170 62 185 62 Q200 62 200 80"/><circle class="c-red ink-f thin" cx="185" cy="118" r="12"/>`+
+    `<rect class="c-yellow ink-f" x="232" y="112" width="52" height="46" rx="4"/><path class="c-red ink-f thin" d="M232 128 H284 V136 H232Z M254 112 H262 V158 H254Z"/>`),
+  immigration: () => W(sky()+cloud(240,18,0.8)+
+    `<rect class="c-stone ink-f" x="196" y="40" width="100" height="120"/>`+[60,84,108,132].map(y=>[210,234,258,282].map(x=>`<rect class="c-sky ink-f thin" x="${x-6}" y="${y}" width="12" height="14"/>`).join("")).join("")+
+    `<rect class="c-ground" x="-10" y="158" width="340" height="40"/>`+
+    `<rect class="c-card ink-f" x="34" y="44" width="110" height="128" rx="6" transform="rotate(-5 89 108)"/><path class="ink thin" d="M50 70 H124 M50 86 H124 M50 102 H110 M50 118 H124 M50 134 H96" transform="rotate(-5 89 108)"/>`+
+    `<rect class="c-pine ink-f" x="120" y="96" width="62" height="80" rx="6" transform="rotate(8 151 136)"/><circle class="ink thin nofill" cx="151" cy="128" r="12" transform="rotate(8 151 136)"/>`+
+    `<circle class="c-red" cx="104" cy="140" r="14" opacity=".85"/><circle class="ink thin nofill" cx="104" cy="140" r="14"/>`),
+  cake: () => W(sky("c-pink")+
+    `<ellipse class="c-card ink-f" cx="120" cy="140" rx="90" ry="20"/>`+
+    `<path class="c-card ink-f" d="M70 136 L120 70 L180 110 V140 Q130 152 70 136Z"/><path class="c-yellow ink-f" d="M70 136 V112 L120 70 L180 110 V122 Q130 136 70 120Z"/><path class="c-card ink-f thin" d="M70 112 L120 70 L180 110 Q130 120 70 112Z"/>`+
+    `<circle class="c-red ink-f thin" cx="120" cy="66" r="10"/><path class="c-green ink-f thin" d="M120 56 Q126 48 132 54Z"/>`+
+    `<path class="c-card ink-f" d="M210 98 H270 V132 Q270 150 252 150 H228 Q210 150 210 132Z"/><path class="ink" d="M270 108 Q288 108 286 122 Q284 134 270 132"/><ellipse class="c-brown" cx="240" cy="100" rx="26" ry="4"/>`+
+    `<path class="ink thin" d="M228 88 q-6 -10 0 -18 M248 88 q-6 -10 0 -18"/>`),
+  records: () => W(sky("c-yellow")+
+    `<rect class="c-red ink-f" x="34" y="40" width="110" height="110" rx="4"/><circle class="c-card ink-f thin" cx="89" cy="95" r="30"/><circle class="c-yellow ink-f thin" cx="89" cy="95" r="10"/>`+
+    `<circle class="c-ink" cx="200" cy="100" r="62"/><circle class="ink thin" cx="200" cy="100" r="48" style="stroke:var(--stone)"/><circle class="ink thin" cx="200" cy="100" r="36" style="stroke:var(--stone)"/><circle class="c-blue ink-f thin" cx="200" cy="100" r="18"/><circle class="c-card" cx="200" cy="100" r="3"/>`+
+    `<path class="ink" d="M276 40 V70 M276 40 L294 34 V62"/><ellipse class="c-ink" cx="271" cy="70" rx="7" ry="5"/><ellipse class="c-ink" cx="289" cy="62" rx="7" ry="5"/>`),
+  torii: () => W(sky()+cloud(30,14,0.8)+
+    roundTree(30,98,1.4,"c-pine")+roundTree(80,90,1.2,"c-green")+roundTree(244,92,1.2,"c-green")+roundTree(292,98,1.4,"c-pine")+
+    `<path class="c-wood ink-f" d="M84 36 Q160 22 236 36 L232 48 Q160 36 88 48Z"/><rect class="c-wood ink-f" x="100" y="58" width="120" height="10"/>`+
+    `<rect class="c-wood ink-f" x="112" y="48" width="14" height="114"/><rect class="c-wood ink-f" x="194" y="48" width="14" height="114"/>`+
+    `<path class="c-ground ink-f" d="M120 162 L140 120 H180 L200 162Z"/><rect class="c-ground" x="-10" y="160" width="340" height="40"/>`),
+  avenue: () => W(sky()+cloud(210,12,0.8)+
+    `<path class="c-ground ink-f" d="M120 180 L150 70 H170 L200 180Z"/>`+
+    [[40,120,1.3],[80,100,1],[110,86,0.7],[280,120,1.3],[240,100,1],[210,86,0.7]].map(t=>roundTree(t[0],t[1],t[2],"c-green")).join("")+
+    `<rect class="c-card ink-f" x="-10" y="120" width="40" height="60"/><rect class="c-blue ink-f" x="290" y="116" width="40" height="64"/>`+SNOW),
+  roastery: () => W(sky("c-paper")+
+    `<rect class="c-copper ink-f" x="54" y="20" width="84" height="150" rx="12"/>`+[40,64,88,112,136,160].map(y=>`<path class="ink thin" d="M54 ${y} H138"/>`).join("")+
+    [64,96,128].map(x=>[30,52,76,100,124,148].map(y=>`<circle class="c-ink" cx="${x}" cy="${y}" r="1.6"/>`).join("")).join("")+
+    `<path class="ink" d="M138 46 Q180 46 180 80"/>`+
+    `<path class="c-card ink-f" d="M180 108 H250 V140 Q250 158 232 158 H198 Q180 158 180 140Z"/><path class="ink" d="M250 116 Q270 116 268 130 Q266 142 250 140"/><ellipse class="c-brown" cx="215" cy="110" rx="30" ry="4"/>`+
+    `<path class="ink thin" d="M200 98 q-6 -10 0 -18 M222 98 q-6 -10 0 -18"/>`+
+    [[270,70],[288,86],[262,92],[290,60]].map(b=>`<ellipse class="c-brown ink-f thin" cx="${b[0]}" cy="${b[1]}" rx="8" ry="11"/><path class="ink thin" d="M${b[0]} ${b[1]-9} Q${b[0]-4} ${b[1]} ${b[0]} ${b[1]+9}"/>`).join("")),
+  river: () => W(sky()+cloud(30,10,0.7)+
+    `<path class="c-ground ink-f" d="M-10 70 H330 V100 H-10Z"/><path class="c-water ink-f" d="M-10 100 H330 V146 H-10Z"/><path class="c-ground ink-f" d="M-10 146 H330 V200 H-10Z"/>`+
+    `<path class="c-card ink-f" d="M120 98 Q160 74 200 98 V106 H120Z"/><path class="ink thin" d="M126 98 V88 M140 92 V82 M160 88 V78 M180 92 V82 M194 98 V88"/>`+
+    [20,70,250,300].map(x=>roundTree(x,58,0.9,"c-pine")).join("")+[40,100,220,280].map(x=>roundTree(x,140,0.9,"c-green")).join("")+
+    `<path class="ink thin" d="M30 120 q10 -4 20 0 M230 128 q10 -4 20 0 M130 126 q10 -4 20 0"/>`),
+  dinner: () => W(sky("c-night")+
+    [60,130,200,270].map((x,i)=>`<path class="ink thin" d="M${x} 0 V18"/><rect class="c-red ink-f" x="${x-14}" y="18" width="28" height="36" rx="12"/><path class="ink thin" d="M${x-14} 28 H${x+14} M${x-14} 44 H${x+14}"/><circle class="c-glow" cx="${x}" cy="36" r="5" opacity=".9"/>`).join("")+
+    `<rect class="c-wood ink-f" x="-10" y="132" width="340" height="60"/>`+
+    `<path class="c-card ink-f" d="M100 104 H220 Q216 150 160 152 Q104 150 100 104Z"/><path class="c-yellow" d="M108 106 H212 Q210 116 160 118 Q110 116 108 106Z"/><path class="ink thin" d="M120 100 Q160 88 200 100"/>`+
+    `<path class="ink" d="M226 80 L170 106 M234 86 L176 110"/>`+
+    `<path class="ink thin" d="M140 90 q-6 -10 0 -18 M160 86 q-6 -10 0 -18 M180 90 q-6 -10 0 -18"/>`),
+  todai: () => W(sky()+cloud(230,12,0.8)+
+    roundTree(30,96,1.3,"c-yellow")+roundTree(290,96,1.3,"c-yellow")+
+    `<path class="c-red ink-f" d="M76 76 Q160 52 244 76 L240 88 H80Z"/><rect class="c-red ink-f" x="94" y="88" width="132" height="12"/>`+
+    `<rect class="c-red ink-f" x="100" y="100" width="18" height="60"/><rect class="c-red ink-f" x="202" y="100" width="18" height="60"/><rect class="c-ink" x="118" y="100" width="84" height="60" opacity=".22"/>`+
+    `<path class="ink thin" d="M126 100 V160 M194 100 V160"/>`+
+    `<rect class="c-ground" x="-10" y="158" width="340" height="40"/>`+
+    [[40,170],[70,166],[250,168],[284,172],[150,174]].map(p=>`<path class="c-yellow ink-f thin" d="M${p[0]} ${p[1]} q-8 -10 0 -14 q8 4 0 14z"/>`).join("")),
+  teamlab: () => W(sky("c-night")+
+    [[40,40,16,"c-pink"],[90,90,22,"c-blue"],[150,40,14,"c-yellow"],[200,110,26,"c-green"],[260,50,18,"c-pink"],[290,120,14,"c-yellow"],[30,130,12,"c-green"],[130,140,16,"c-pink"],[240,150,10,"c-blue"]].map(c=>`<circle class="${c[3]}" cx="${c[0]}" cy="${c[1]}" r="${c[2]}" opacity=".85"/><circle class="ink thin nofill" cx="${c[0]}" cy="${c[1]}" r="${c[2]}"/>`).join("")+
+    [[60,70],[180,70],[230,90],[110,120],[270,90]].map(f=>`<g transform="translate(${f[0]} ${f[1]})">${[0,72,144,216,288].map(a=>`<ellipse class="c-glow" cx="0" cy="-6" rx="3" ry="6" transform="rotate(${a})"/>`).join("")}</g>`).join("")),
+  day16: () => W(sky()+cloud(150,10,0.7)+
+    `<path class="ink dash" d="M160 20 V176"/>`+
+    `<rect class="c-stone ink-f" x="20" y="60" width="70" height="100"/>`+[80,104,128].map(y=>[34,54,74].map(x=>`<rect class="c-sky ink-f thin" x="${x-5}" y="${y}" width="10" height="12"/>`).join("")).join("")+
+    `<circle class="c-red ink-f" cx="122" cy="110" r="22"/><circle class="c-ink" cx="122" cy="110" r="5"/>`+
+    `<path class="c-wood ink-f" d="M184 52 Q240 40 296 52 L292 62 Q240 52 188 62Z"/><rect class="c-wood ink-f" x="198" y="62" width="11" height="96"/><rect class="c-wood ink-f" x="272" y="62" width="11" height="96"/><rect class="c-wood ink-f" x="196" y="72" width="90" height="8"/>`+
+    `<rect class="c-ground" x="-10" y="158" width="340" height="40"/>`),
+  hero: () => W(sky()+
+    `<circle class="c-sun ink-f thin" cx="262" cy="44" r="22"/>`+
+    `<path class="c-stone ink-f" d="M-10 120 L60 50 L110 96 L170 34 L250 108 L330 60 V160 H-10Z"/><path class="c-snow ink-f thin" d="M48 62 L60 50 L74 62 L66 66 L60 60 L54 66Z M156 48 L170 34 L186 48 L178 52 L170 46 L162 52Z"/>`+
+    pineTree(26,92,0.7)+pineTree(96,100,0.55)+
+    `<rect class="c-brick ink-f" x="150" y="112" width="160" height="50"/><path class="c-stone ink-f" d="M168 112 V100 Q184 80 200 100 V112Z M260 112 V100 Q276 80 292 100 V112Z"/>`+
+    [170,190,210,230,250,270,290].map(x=>`<rect class="c-card ink-f thin" x="${x-4}" y="126" width="8" height="12" rx="2"/>`).join("")+
+    `<rect class="c-red ink-f" x="120" y="64" width="10" height="98"/><path class="ink thin" d="M120 80 H130 M120 96 H130 M120 112 H130 M120 128 H130 M120 144 H130"/><path class="c-red ink-f" d="M114 64 L125 30 L136 64Z"/>`+
+    `<rect class="c-ground" x="-10" y="160" width="340" height="40"/>`+SNOW)
+};
+
+/* ---------- data ---------- */
+const DAYS = [
+  {id:"d1", date:"12/13", wd:"日", title:"抵達日", sub:"抵達成田 → 銀座", art:"ginza", stay:"TOSEI酒店 可可尼築地銀座",
+   items:[
+    {t:"09:15", title:"JX314 台中起飛", note:"星宇冬季班表，請以電子機票為準。", art:"plane"},
+    {t:"13:25", title:"抵達成田第 2 航廈", note:"入境、領行李約 1 小時。", art:"airport"},
+    {t:"約 14:40", title:"京成 Access 特急 → 東銀座", note:"直通淺草線，免轉車，約 1.5 小時。出發前查班次。", art:"train"},
+    {t:"約 16:30", title:"TOSEI酒店 check-in", note:"可可尼築地銀座。", art:"hotel", spot:true},
+    {t:"17:30", title:"銀座散步、晚餐", note:"有體力可先逛銀座伊東屋本店（週日只開到 19:00），否則留到 12/18。", art:"ginza", opt:"伊東屋選配"}
+   ]},
+  {id:"d2", date:"12/14", wd:"一", title:"輕井澤", sub:"舊輕井澤銀座、星野區", art:"stonechurch", stay:"輕井澤英迪格酒店",
+   callout:"<b>行李：</b>12/15 會回同一家飯店，大件行李請寄放 TOSEI，只帶一晚的隨身行李去輕井澤（請先向飯店確認寄放服務）。",
+   items:[
+    {t:"08:00", title:"東京車站", note:"出發前在丸之內紅磚站舍拍照。", art:"tokyostation", spot:true},
+    {t:"約 08:50", title:"北陸新幹線 → 輕井澤", note:"約 1 小時，建議先劃位。", art:"shinkansen"},
+    {t:"約 10:00", title:"巴士到「舊輕井澤」", note:"從輕井澤站搭巴士約 4 分鐘。大件行李可先寄放車站置物櫃。", art:"bus"},
+    {t:"10:15", title:"APPLE PIE lab 軽井沢", note:"就在舊輕井澤銀座通入口、圓環旁。推薦現填的蘋果卡士達派。", art:"applepie", spot:true},
+    {t:"10:45", title:"舊輕井澤銀座通散步", note:"冬季部分店家休息或縮短營業。", art:"street", spot:true},
+    {t:"11:30", title:"BOULANGERIE ASANOYA", note:"淺野屋舊道本店。麵包當早午餐或伴手禮。", art:"bread", spot:true},
+    {t:"12:30", title:"午餐", note:"舊輕銀座一帶。", art:"dinner"},
+    {t:"14:00", title:"前往星野區", note:"計程車或巴士約 20 分鐘，出發前查巴士班次。", art:"bus"},
+    {t:"14:30", title:"石之教會 內村鑑三記念堂", note:"內部禁止拍照；有婚禮時可能無法入內。", art:"stonechurch", spot:true},
+    {t:"15:15", title:"輕井澤高原教會", note:"參觀時間 10:00–17:00。", art:"woodchurch", spot:true},
+    {t:"16:00", title:"榆樹街小鎮（Harunire Terrace）", note:"12 月有聖誕燈飾。逛街、喝咖啡、吃晚餐。", art:"harunire", spot:true},
+    {t:"18:30", title:"高原教會聖誕燭光夜", note:"往年 12/1–12/25 晚間舉辦，部分年度採預約制，請確認 2026 年辦法。", art:"woodchurch", opt:"選配"},
+    {t:"約 19:30", title:"輕井澤英迪格酒店", note:"搭計程車前往。check-in 15:00 起；距輕井澤站車程約 5 分鐘。", art:"firepit", spot:true}
+   ]},
+  {id:"d3", date:"12/15", wd:"二", title:"輕井澤 → 東京", sub:"悠閒早晨、逛東京車站", art:"morning", stay:"TOSEI酒店 可可尼築地銀座",
+   callout:"teamLab Borderless 每月第 1、3 個週二休館，12/15 正好休館，所以排在 12/17。",
+   items:[
+    {t:"早上", title:"英迪格悠閒早晨", note:"早餐、泡大浴場、享受焚火庭園。check-out 11:00。", art:"morning"},
+    {t:"11:00", title:"check-out → 輕井澤站", note:"前一天沒逛完的店可在此補。", art:"suitcase"},
+    {t:"約 13:00", title:"北陸新幹線回東京", note:"", art:"shinkansen"},
+    {t:"約 14:15", title:"東京車站", note:"站內商店街、買伴手禮。", art:"shopping", spot:true},
+    {t:"傍晚", title:"回 TOSEI", note:"取回寄放行李、重新 check-in。", art:"hotel"}
+   ]},
+  {id:"d4", date:"12/16", wd:"三", title:"分組日", sub:"A 組入管局、SHU、Tower Records／B 組明治神宮、中目黑", art:"day16", stay:"TOSEI酒店 可可尼築地銀座",
+   groups:{
+    A:{name:"A 組：入管局 → 澀谷", items:[
+      {t:"07:30", title:"出發 → JR 品川站港南口", note:"從飯店搭淺草線往品川一帶，約 30 分鐘。", art:"train"},
+      {t:"08:15", title:"都巴士「品99」", note:"在「東京出入国在留管理局前」下車，下車就在門口。", art:"bus"},
+      {t:"08:30", title:"東京出入國在留管理局", note:"開門前排隊、辦理手續。受理時間平日 9:00–16:00，越早到越好。", art:"immigration", spot:true},
+      {t:"辦完後", title:"JR 山手線到澀谷", note:"回品川站搭車，約 15 分鐘。", art:"train"},
+      {t:"午後", title:"Coffee & Cake SHU Premium Shibuya-Ekimae", note:"辦完手續後休息，吃午餐或下午茶。", art:"cake", spot:true},
+      {t:"接著", title:"Tower Records 澀谷店", note:"澀谷站八公口步行約 5 分鐘。營業約 11:00–22:00，晚到也逛得到。", art:"records", spot:true},
+      {t:"18:00", title:"在澀谷與 B 組會合吃晚餐", note:"", art:"dinner"}
+    ]},
+    B:{name:"B 組：明治神宮 → 中目黑", note:"B 組不用去入管局、SHU 和 Tower Records。", items:[
+      {t:"08:30", title:"出發 → 原宿", note:"", art:"train"},
+      {t:"09:15", title:"明治神宮", note:"12 月開門 6:40、16:00 關門；御朱印、御守 9:00 起。", art:"torii", spot:true},
+      {t:"11:00", title:"表參道／原宿逛街、午餐", note:"", art:"avenue"},
+      {t:"14:00", title:"星巴克臻選® 東京烘焙工坊", note:"中目黑。營業 7:00–22:00；中目黑站步行約 14 分鐘。", art:"roastery", spot:true},
+      {t:"16:30", title:"中目黑／代官山自由逛", note:"", art:"river"},
+      {t:"18:00", title:"到澀谷與 A 組會合", note:"中目黑到澀谷搭東急東橫線一站。", art:"dinner"}
+    ]}
+   }},
+  {id:"d5", date:"12/17", wd:"四", title:"東京大學 ＋ teamLab", sub:"本鄉校區、麻布台Hills", art:"teamlab", stay:"TOSEI酒店 可可尼築地銀座",
+   items:[
+    {t:"09:30", title:"東京大學本鄉校區", note:"搭地鐵到本鄉三丁目或東大前。看赤門、安田講堂、三四郎池。", art:"todai", spot:true},
+    {t:"12:00", title:"本鄉一帶午餐", note:"", art:"dinner"},
+    {t:"14:00", title:"teamLab Borderless", note:"麻布台Hills，神谷町站 5 號出口直通（日比谷線從築地可直達）。10:00–21:00，最後入場 20:00；成人 3,800 日圓起。請先上網買指定時段票。", art:"teamlab", spot:true},
+    {t:"傍晚", title:"晚餐", note:"在麻布台Hills 吃，或回銀座。", art:"ginza"}
+   ]},
+  {id:"d6", date:"12/18", wd:"五", title:"彈性日", sub:"A 組選配補行程、銀座伊東屋", art:"stationery", stay:"TOSEI酒店 可可尼築地銀座",
+   items:[
+    {t:"A 組選配", title:"補 12/16 沒去的地方", note:"上午明治神宮（16:00 關門）→ 中目黑星巴克臻選東京烘焙工坊。若入管局要再去領件，也排在今天。", art:"torii", group:"A", opt:"選配"},
+    {t:"其他人", title:"自由活動、購物", note:"", art:"shopping"},
+    {t:"全體晚上", title:"銀座伊東屋本店", note:"平日 10:00–20:00。", art:"stationery", spot:true},
+    {t:"之後", title:"銀座晚餐", note:"", art:"ginza"}
+   ]},
+  {id:"d7", date:"12/19", wd:"六", title:"返程", sub:"成田 → 台中", art:"airport", stay:"—",
+   items:[
+    {t:"09:30", title:"飯店 check-out", note:"", art:"suitcase"},
+    {t:"10:15", title:"京成 Access 特急 → 成田", note:"在東銀座搭車，到成田第 2 航廈約 1.5 小時。", art:"train"},
+    {t:"約 12:00", title:"抵達成田、報到", note:"建議起飛前 2 小時到。", art:"airport"},
+    {t:"14:25", title:"JX315 成田起飛", note:"", art:"plane"},
+    {t:"17:55", title:"抵達台中", note:"", art:"plane"}
+   ]}
+];
+
+const SPOTS = [
+  {n:"東京車站", d:"12/14 早上、12/15 下午", art:"tokyostation", day:"d2"},
+  {n:"APPLE PIE lab 軽井沢", d:"12/14", art:"applepie", day:"d2"},
+  {n:"BOULANGERIE ASANOYA", d:"12/14", art:"bread", day:"d2"},
+  {n:"舊輕井澤銀座通", d:"12/14", art:"street", day:"d2"},
+  {n:"石之教會 內村鑑三記念堂", d:"12/14", art:"stonechurch", day:"d2"},
+  {n:"輕井澤高原教會", d:"12/14", art:"woodchurch", day:"d2"},
+  {n:"榆樹街小鎮", d:"12/14", art:"harunire", day:"d2"},
+  {n:"輕井澤英迪格酒店", d:"12/14 住宿", art:"firepit", day:"d2"},
+  {n:"明治神宮", d:"12/16（B 組）、12/18（A 組選配）", art:"torii", day:"d4"},
+  {n:"星巴克臻選® 東京烘焙工坊", d:"12/16（B 組）、12/18（A 組選配）", art:"roastery", day:"d4"},
+  {n:"東京出入國在留管理局", d:"12/16（A 組）", art:"immigration", day:"d4"},
+  {n:"Coffee & Cake SHU Premium Shibuya-Ekimae", d:"12/16（A 組）", art:"cake", day:"d4"},
+  {n:"Tower Records 澀谷店", d:"12/16（A 組）", art:"records", day:"d4"},
+  {n:"東京大學", d:"12/17", art:"todai", day:"d5"},
+  {n:"teamLab Borderless", d:"12/17", art:"teamlab", day:"d5"},
+  {n:"銀座 伊東屋 本店", d:"12/18（12/13 選配）", art:"stationery", day:"d6"},
+  {n:"TOSEI酒店 可可尼築地銀座", d:"12/13、12/15–12/18 住宿", art:"hotel", day:"d1"}
+];
+
+const PREP = [
+  {n:"確認電子機票上的起降時間", d:"冬季班表：JX314 09:15→13:25、JX315 14:25→17:55"},
+  {n:"買 teamLab Borderless 指定時段票", d:"12/17 下午入場"},
+  {n:"確認 TOSEI 能寄放行李", d:"12/14–12/15 去輕井澤期間"},
+  {n:"確認高原教會聖誕燭光夜", d:"2026 年的時間與是否需預約"},
+  {n:"查星野區巴士班次", d:"或直接搭計程車"},
+  {n:"確認入管局手續能否線上預約", d:"A 組 12/16"}
+];
+
+/* ---------- helpers ---------- */
+const esc = s => String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const art = k => (ART[k]||ART.plane)();
+const card = (it) => `
+  <article class="card">
+    <div class="art">${art(it.art)}</div>
+    <span class="time num">${esc(it.t)}</span>
+    <div class="body">
+      <h3>${esc(it.title)}</h3>
+      ${it.note?`<p>${esc(it.note)}</p>`:""}
+      ${(it.spot||it.opt||it.group)?`<div class="meta">${it.spot?`<span class="tag spot">地圖清單地點</span>`:""}${it.opt?`<span class="tag opt">${esc(it.opt)}</span>`:""}${it.group?`<span class="tag ${it.group.toLowerCase()}">${it.group} 組</span>`:""}</div>`:""}
+    </div>
+  </article>`;
+const checkSvg = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff8ee" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/* ---------- views ---------- */
+let curDay = store.get("day","d1");
+if(!DAYS.some(d=>d.id===curDay)) curDay = "d1";
+let curGroup = store.get("group","A");
+
+function renderHome(){
+  const start = new Date(2026,11,13), now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = Math.round((start - today)/86400000);
+  const countHTML = diff>0 ? `<div class="count"><span>距離出發還有</span><b class="num">${diff}</b><span>天</span></div>`
+                  : diff>-7 ? `<div class="count"><b>旅途中</b><span>第 ${1-diff} 天</span></div>`
+                  : `<div class="count"><b>旅程結束</b><span>辛苦了！</span></div>`;
+  document.getElementById("view-home").innerHTML = `
+    <div class="hero">
+      <div class="hero-art">${art("hero")}</div>
+      <div class="hero-body">
+        <span class="eyebrow">12/13 – 12/19 · 6 晚 7 天</span>
+        <h1>2026 東京冬令營</h1>
+        <p>東京車站出發，到輕井澤住一晚看雪中教會，再回東京逛神宮、美術館和銀座。</p>
+        ${countHTML}
+      </div>
+    </div>
+
+    <h2 class="section-title">班機</h2>
+    <div class="flights">
+      <div class="flight">
+        <div class="flight-top"><span class="flight-no">JX314</span><span>12/13（日）去程</span></div>
+        <div class="route"><div><div class="t num">09:15</div><div class="p">台中 RMQ</div></div><div class="line"></div><div style="text-align:right"><div class="t num">13:25</div><div class="p">成田 NRT T2</div></div></div>
+      </div>
+      <div class="flight">
+        <div class="flight-top"><span class="flight-no">JX315</span><span>12/19（六）回程</span></div>
+        <div class="route"><div><div class="t num">14:25</div><div class="p">成田 NRT T2</div></div><div class="line"></div><div style="text-align:right"><div class="t num">17:55</div><div class="p">台中 RMQ</div></div></div>
+      </div>
+    </div>
+    <p class="note-small">星宇冬季班表（2026/10/25 起每日飛）。請以電子機票上的時間為準。</p>
+
+    <h2 class="section-title">每日行程</h2>
+    <div class="days-grid">
+      ${DAYS.map(d=>`<button class="day-tile" type="button" data-goday="${d.id}">
+        <span class="mini">${art(d.art)}</span>
+        <span><span class="d num">${d.date}<small>（${d.wd}）</small></span><br><span class="th">${esc(d.title)}・${esc(d.sub)}</span></span>
+      </button>`).join("")}
+    </div>
+
+    <h2 class="section-title">住宿</h2>
+    <div class="stay-list">
+      <div class="stay"><b>TOSEI酒店 可可尼築地銀座</b><span>12/13、12/15–12/18（共 5 晚）</span></div>
+      <div class="stay"><b>輕井澤英迪格酒店</b><span>12/14（1 晚）・check-in 15:00／check-out 11:00</span></div>
+    </div>
+    <p class="foot">營業時間與交通皆為行前查詢資料，出發前請再確認一次。</p>`;
+}
+
+function renderTrip(){
+  const d = DAYS.find(x=>x.id===curDay);
+  let body;
+  if(d.groups){
+    const col = (g) => `<div class="group-col" data-g="${g}">
+        <h3 class="gh"><span class="pill">${g}</span>${esc(d.groups[g].name)}</h3>
+        ${d.groups[g].note?`<p class="callout">${esc(d.groups[g].note)}</p>`:""}
+        <div class="cards">${d.groups[g].items.map(card).join("")}</div>
+      </div>`;
+    body = `<div class="seg" role="group" aria-label="切換組別">
+        <button type="button" data-g="A" aria-pressed="${curGroup==="A"}">A 組</button>
+        <button type="button" data-g="B" aria-pressed="${curGroup==="B"}">B 組</button>
+      </div>
+      <div class="groups" data-show="${curGroup}">${col("A")}${col("B")}</div>`;
+  } else {
+    body = `<div class="cards">${d.items.map(card).join("")}</div>`;
+  }
+  document.getElementById("view-trip").innerHTML = `
+    <div class="day-picker" role="group" aria-label="選擇日期">
+      ${DAYS.map(x=>`<button class="chip num" type="button" data-day="${x.id}" aria-pressed="${x.id===curDay}">${x.date}<small>${x.wd}</small></button>`).join("")}
+    </div>
+    <div class="day-head">
+      <div class="art">${art(d.art)}</div>
+      <div class="body">
+        <span class="date num">${d.date}（${d.wd}）</span>
+        <h2>${esc(d.title)}</h2>
+        <div class="meta"><span class="tag">${esc(d.sub)}</span><span class="tag">住宿：${esc(d.stay)}</span></div>
+      </div>
+    </div>
+    ${d.callout?`<p class="callout">${d.callout}</p>`:""}
+    ${body}`;
+  const chip = document.querySelector(`.chip[data-day="${curDay}"]`);
+  if(chip && chip.scrollIntoView) chip.scrollIntoView({block:"nearest",inline:"center"});
+}
+
+function renderChecklist(viewId, key, items, opts){
+  const state = store.get(key, {});
+  const done = items.filter((_,i)=>state[i]).length;
+  document.getElementById(viewId).innerHTML = `
+    <div class="list-head">
+      <h2>${opts.title}</h2>
+      <p>${opts.desc}</p>
+      <div class="progress"><div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="${items.length}" aria-valuenow="${done}" aria-label="完成進度"><i style="width:${done/items.length*100}%"></i></div><b class="num">${done} / ${items.length}</b></div>
+    </div>
+    <div class="checks">
+      ${items.map((it,i)=>`<label class="check${state[i]?" done":""}${it.art?"":" noimg"}" for="${key}-${i}">
+        <input type="checkbox" id="${key}-${i}" data-key="${key}" data-i="${i}" ${state[i]?"checked":""}>
+        <span class="box">${checkSvg}</span>
+        ${it.art?`<span class="thumb">${art(it.art)}</span>`:""}
+        <span class="txt"><b>${esc(it.n)}</b><span>${esc(it.d)}</span></span>
+      </label>`).join("")}
+    </div>
+    <button class="reset" type="button" data-reset="${key}">清除勾選</button>
+    <p class="foot">勾選只存在這台裝置的瀏覽器裡，不會同步給其他人。</p>`;
+}
+const renderSpots = () => renderChecklist("view-spots","spots",SPOTS,{title:"行程確認清單",desc:"Google 地圖清單「2026 東京冬令營」的 17 個地點，全部排進行程。去過就打勾。"});
+const renderPrep = () => renderChecklist("view-prep","prep",PREP,{title:"出發前確認清單",desc:"出發前要先處理或查清楚的事。"});
+
+/* ---------- routing ---------- */
+const VIEWS = ["home","trip","spots","prep"];
+function route(){
+  let v = (location.hash||"").replace("#","");
+  if(!VIEWS.includes(v)) v = "home";
+  VIEWS.forEach(n=>document.getElementById("view-"+n).classList.toggle("active", n===v));
+  document.querySelectorAll(".nav a").forEach(a=>{ if(a.dataset.v===v) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
+  if(v==="home") renderHome();
+  if(v==="trip") renderTrip();
+  if(v==="spots") renderSpots();
+  if(v==="prep") renderPrep();
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", route);
+
+document.addEventListener("click", e=>{
+  const go = e.target.closest("[data-goday]");
+  if(go){ curDay = go.dataset.goday; store.set("day",curDay); if(location.hash==="#trip") route(); else location.hash="trip"; return; }
+  const chip = e.target.closest("[data-day]");
+  if(chip){ curDay = chip.dataset.day; store.set("day",curDay); renderTrip(); return; }
+  const seg = e.target.closest(".seg [data-g]");
+  if(seg){ curGroup = seg.dataset.g; store.set("group",curGroup);
+    document.querySelector(".groups").dataset.show = curGroup;
+    document.querySelectorAll(".seg [data-g]").forEach(b=>b.setAttribute("aria-pressed", b.dataset.g===curGroup)); return; }
+  const rs = e.target.closest("[data-reset]");
+  if(rs){ store.set(rs.dataset.reset,{}); rs.dataset.reset==="spots"?renderSpots():renderPrep(); }
+});
+document.addEventListener("change", e=>{
+  const cb = e.target.closest("input[data-key]");
+  if(!cb) return;
+  const key = cb.dataset.key, st = store.get(key,{});
+  st[cb.dataset.i] = cb.checked; store.set(key, st);
+  key==="spots"?renderSpots():renderPrep();
+  const again = document.getElementById(cb.id); if(again) again.focus();
+});
+
+/* ---------- theme ---------- */
+const MOON = "M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z";
+const SUN = "M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0-5 1.2 3h-2.4zm0 20-1.2-3h2.4zM2 12l3-1.2v2.4zm20 0-3 1.2v-2.4zM4.9 4.9l3 1.3-1.7 1.7zm14.2 14.2-3-1.3 1.7-1.7zM4.9 19.1l1.3-3 1.7 1.7zM19.1 4.9l-1.3 3-1.7-1.7z";
+const root = document.documentElement;
+function isDark(){
+  const t = root.getAttribute("data-theme");
+  if(t) return t==="dark";
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+function paintThemeBtn(){
+  const dark = isDark();
+  document.getElementById("themeIco").setAttribute("d", dark?SUN:MOON);
+  document.getElementById("themeLabel").textContent = dark?"淺色":"深色";
+}
+const saved = store.get("theme", null);
+if(saved==="dark"||saved==="light") root.setAttribute("data-theme", saved);
+document.getElementById("themeBtn").addEventListener("click", ()=>{
+  const next = isDark()?"light":"dark";
+  root.setAttribute("data-theme", next); store.set("theme", next); paintThemeBtn();
+});
+if(window.matchMedia){ const mq = window.matchMedia("(prefers-color-scheme: dark)"); if(mq.addEventListener) mq.addEventListener("change", paintThemeBtn); }
+new MutationObserver(paintThemeBtn).observe(root,{attributes:true,attributeFilter:["data-theme"]});
+paintThemeBtn();
+
+route();
+})();
+</script>
+</body>
+</html>
