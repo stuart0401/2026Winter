@@ -160,8 +160,8 @@ button{font:inherit;color:inherit}
 .album p{font-size:14px;color:var(--soft)}
 .btn.primary{background:var(--accentbg);color:var(--onaccent)}
 .btn[disabled]{opacity:.45;cursor:not-allowed}
-.go-map{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;min-height:44px;margin-top:10px;padding:0 14px 0 12px;border:2px solid currentColor;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--accent);text-decoration:none;-webkit-tap-highlight-color:transparent}
-.go-map .ico{width:17px;height:17px}
+.go-map{display:inline-flex;align-items:center;gap:6px;min-width:0;line-height:1.3;word-break:keep-all;padding-block:6px;min-height:44px;margin-top:10px;padding:0 14px 0 12px;border:2px solid currentColor;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--accent);text-decoration:none;-webkit-tap-highlight-color:transparent}
+.go-map .ico{width:17px;height:17px;flex:none}
 .lk-row{display:flex;flex-wrap:wrap;gap:0 10px}
 .extra{margin-top:14px;padding-top:12px;border-top:2px dashed var(--soft)}
 .extra-hd{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
@@ -304,11 +304,14 @@ div.mv:not(.shx){flex-direction:column;align-items:stretch}
 .ck-row .ck{flex:1;min-width:0}
 .ck-del{flex:none;width:44px;height:44px;display:grid;place-items:center;border:0;border-radius:12px;background:transparent;color:var(--soft);cursor:pointer}
 .ck-del .ico{width:18px;height:18px}
+.ck-del.confirm{width:auto;padding:0 12px;gap:4px;display:inline-flex;align-items:center;border:2px solid var(--accent);border-radius:999px;color:var(--accent);font-size:13px;font-weight:700;white-space:nowrap}
 @media (hover:hover){.ck-del:hover{background:var(--chip);color:var(--accent)}}
 .add-item{display:flex;gap:8px;margin-top:14px}
 .add-item input{flex:1;min-width:0;min-height:44px;padding:0 14px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit;font-size:16px}
 .add-item input::placeholder{color:var(--soft)}
 .add-item .btn{flex:none}
+.add-msg{min-height:1.4em;margin-top:6px;font-size:13.5px;font-weight:700;color:var(--accent)}
+.add-item input[aria-invalid="true"]{border-color:var(--accent)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .tips-card{margin-top:22px;padding:18px 20px;border-color:var(--accent)}
 .tips-card h2{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:900}
@@ -623,7 +626,7 @@ const MAPQ = {
 const SPOTQ = ["東京駅 丸の内駅舎","APPLE PIE lab 軽井沢","ブランジェ浅野屋 軽井沢旧道本店","旧軽井沢銀座通り","石の教会 内村鑑三記念堂","軽井沢高原教会","ハルニレテラス","ホテルインディゴ軽井沢",
   "明治神宮","スターバックス リザーブ ロースタリー 東京","東京出入国在留管理局","Coffee & Cake SHU Premium Shibuya-Ekimae","タワーレコード渋谷店","東京大学 本郷キャンパス","チームラボボーダレス 麻布台ヒルズ","銀座 伊東屋 本店","TOSEIホテル ココネ築地銀座","森のチャペル 軽井沢礼拝堂","Karuizawa New Art Museum"];
 const mapUrl = q => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
-const mapLink = (q, name) => `<a class="go-map" href="${mapUrl(q)}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟：${esc(name)}">${ico("map")}在 Google 地圖開啟${ico("ext")}</a>`;
+const mapLink = (q, name) => `<a class="go-map" href="${mapUrl(q)}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟：${esc(name)}（另開新視窗）">${ico("map")}在 Google 地圖開啟${ico("ext")}</a>`;
 const NEAR = {
   tosei: {stores:[
     {k:"超商", n:"全家 築地市場前店", w:1, h:"24 小時", q:"ファミリーマート 築地市場前店"},
@@ -674,7 +677,7 @@ let NEAR_UID = 0;
 function listHTML(title, sub, rows, note, iconName){
   const id = "near-" + (++NEAR_UID);
   const li = rows.map(s=>`<li><div class="nr-tx"><strong>${esc(s.n)}</strong><span><b class="nr-k" data-k="${esc(s.k)}">${esc(s.k)}</b>${esc(s.w)}・${esc(s.h)}</span></div>
-    <a class="nr-map" href="${mapUrl(s.q)}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟：${esc(s.n)}">${ico("map")}<span>地圖</span></a></li>`).join("");
+    <a class="nr-map" href="${mapUrl(s.q)}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟：${esc(s.n)}（另開新視窗）">${ico("map")}<span>地圖</span></a></li>`).join("");
   return `<div class="near" data-open="false"><button type="button" class="near-hd" aria-expanded="false" aria-controls="${id}">${ico(iconName)}<span>${title}<small>${esc(sub)}</small></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
     <div class="near-body" id="${id}"><div><ul>${li}</ul><p class="foot">${esc(note)}</p></div></div></div>`;
 }
@@ -697,13 +700,13 @@ function itemHTML(it, grp){
       <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
       <div class="shx-body" id="${id}"><div><div class="in"><div class="sh-row"><span class="sh-lb">${lab}</span>${chipsFor(it.sh, ref)}</div>
       <p class="foot">${esc(it.note)}</p>
-      <a class="go-map solo" href="${mapUrl(it.sh==="to"?"軽井沢駅南口 バスターミナル":"ホテルインディゴ軽井沢")}" target="_blank" rel="noopener">${ico("map")}${it.sh==="to"?"上車處：輕井澤站南口":"上車處：英迪格酒店"}，在 Google 地圖開啟${ico("ext")}</a></div></div></div></div></div></div>`;
+      <a class="go-map solo" href="${mapUrl(it.sh==="to"?"軽井沢駅南口 バスターミナル":"ホテルインディゴ軽井沢")}" target="_blank" rel="noopener" aria-label="${it.sh==="to"?"上車處：輕井澤站南口":"上車處：英迪格酒店"}，在 Google 地圖開啟（另開新視窗）">${ico("map")}${it.sh==="to"?"上車處：輕井澤站南口":"上車處：英迪格酒店"}，在 Google 地圖開啟${ico("ext")}</a></div></div></div></div></div></div>`;
   }
   if(it.alt){
     const opts = it.opts.map(o=>{
       const href = o.dir || mapUrl(o.q), lab = o.dir ? "Google 地圖車程" : "Google 地圖";
       return `<div class="alt-op"><span class="alt-tag">${o.tag}</span><span class="ib">${ico(o.m)}</span><div><strong>${esc(o.title)}</strong><small>${esc(o.note)}</small>
-        <a class="go-map" href="${href}" target="_blank" rel="noopener" aria-label="${lab}：${esc(o.ql||o.title)}">${ico("map")}${lab}${ico("ext")}</a></div></div>`;}).join("");
+        <a class="go-map" href="${href}" target="_blank" rel="noopener" aria-label="${lab}：${esc(o.ql||o.title)}（另開新視窗）">${ico("map")}${lab}${ico("ext")}</a></div></div>`;}).join("");
     return `<div class="tl move"><div class="tm">${esc(it.t)}</div><div class="rail"></div><div><div class="mv alt"><div class="alt-hd"><strong>${esc(it.title)}</strong><span class="alt-pill">交通二選一</span></div>${it.lead?`<small class="alt-lead">${esc(it.lead)}</small>`:""}${opts}</div></div></div>`;
   }
   const q = MAPQ[it.title];
@@ -713,12 +716,12 @@ function itemHTML(it, grp){
     inner = `<div class="mv"><div class="mv-row"><span class="ib">${ico(it.m)}</span><div><strong>${esc(it.title)}</strong>${it.note?`<small>${esc(it.note)}</small>`:""}${q?mapLink(q,it.title):""}</div></div>${it.shop?shopHTML(it.shop):""}</div>`;
   } else {
     const tags = (it.opt?tagH(it.opt,"opt"):"") + (it.group?tagH(GNAME[it.group], it.group.toLowerCase()):"");
-    inner = `<article class="card stop${it.opt?" dashed":""}">${pic(it.art)}<div class="tx"><h3>${esc(it.title)}</h3>${it.note?`<p>${esc(it.note)}</p>`:""}${tags?`<div class="tags">${tags}</div>`:""}<div class="lk-row">${q?mapLink(q,it.title):""}${it.link?`<a class="go-map" href="${it.link.href}" target="_blank" rel="noopener">${ico("ext")}${esc(it.link.label)}</a>`:""}</div>${it.extra?extraHTML(it.extra):""}</div>${it.shop?shopHTML(it.shop):""}</article>`;
+    inner = `<article class="card stop${it.opt?" dashed":""}">${pic(it.art)}<div class="tx"><h3>${esc(it.title)}</h3>${it.note?`<p>${esc(it.note)}</p>`:""}${tags?`<div class="tags">${tags}</div>`:""}<div class="lk-row">${q?mapLink(q,it.title):""}${it.link?`<a class="go-map" href="${it.link.href}" target="_blank" rel="noopener" aria-label="${esc(it.link.label)}（另開新視窗）">${ico("ext")}${esc(it.link.label)}</a>`:""}</div>${it.extra?extraHTML(it.extra):""}</div>${it.shop?shopHTML(it.shop):""}</article>`;
   }
   return `<div class="tl ${cls}"><div class="tm">${esc(it.t)}</div><div class="rail"></div><div>${inner}</div></div>`;
 }
 function extraHTML(x){
-  return `<div class="extra"><div class="extra-hd">${tagH(x.tag,"opt")}<strong>${esc(x.title)}</strong></div><p>${esc(x.note)}</p>${x.link?`<a class="go-map" href="${x.link.href}" target="_blank" rel="noopener">${ico("ext")}${esc(x.link.label)}</a>`:""}</div>`;
+  return `<div class="extra"><div class="extra-hd">${tagH(x.tag,"opt")}<strong>${esc(x.title)}</strong></div><p>${esc(x.note)}</p>${x.link?`<a class="go-map" href="${x.link.href}" target="_blank" rel="noopener" aria-label="${esc(x.link.label)}（另開新視窗）">${ico("ext")}${esc(x.link.label)}</a>`:""}</div>`;
 }
 function toFirstItem(){
   const v=document.getElementById("view-trip"), first=v.querySelector(".dayhead");
@@ -864,7 +867,7 @@ function renderSpots(){
       <button type="button" class="btn primary" data-share="open" ${n?"":"disabled"}>${ico("share")}生成分享圖</button></div>`;
   const items = LIVE.map(({s,i})=>{
     const mine = PH.list.filter(p=>p.spot===i), show = mine.slice(-3), more = mine.length - show.length;
-    return `<div class="sp"><div class="sp-top">${checkHTML("spots",i,s.n,s.d,s.art,st[i])}<a class="map-btn" href="${mapUrl(SPOTQ[i])}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟 ${esc(s.n)}">${ico("map")}<span>地圖</span></a></div>
+    return `<div class="sp"><div class="sp-top">${checkHTML("spots",i,s.n,s.d,s.art,st[i])}<a class="map-btn" href="${mapUrl(SPOTQ[i])}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟 ${esc(s.n)}（另開新視窗）">${ico("map")}<span>地圖</span></a></div>
       <div class="ph-row">${more>0?`<span class="ph more num" aria-label="還有 ${more} 張">+${more}</span>`:""}${show.map(p=>`<button type="button" class="ph" data-photo="${p.id}" aria-label="查看 ${esc(s.n)} 的照片"><img src="${p.url}" alt=""></button>`).join("")}
       ${PH.ok?`<input type="file" accept="image/*" multiple class="ph-input" id="up-${i}" data-up="${i}"><label class="ph-add" for="up-${i}">${ico("camera")}＋ 照片</label>`:""}</div></div>`;
   }).join("");
@@ -1022,7 +1025,8 @@ function renderPack(){
             ? `<div class="ck-row">${checkHTML("pack",it.k,it.n,"",null,st[it.k])}<button type="button" class="ck-del" data-delcustom="${ci}|${it.custom}" aria-label="刪除「${esc(it.n)}」">${ico("x")}</button></div>`
             : checkHTML("pack",it.k,it.n,"",null,st[it.k])).join("")}</div>
           <form class="add-item" data-addcat="${ci}"><label class="sr" for="add-${ci}">新增到「${esc(c.name)}」</label>
-            <input type="text" id="add-${ci}" maxlength="40" placeholder="新增自己的項目" autocomplete="off" enterkeyhint="done"><button type="submit" class="btn">＋ 新增</button></form>`;
+            <input type="text" id="add-${ci}" maxlength="40" placeholder="例如：暖暖包" autocomplete="off" enterkeyhint="done" aria-describedby="addmsg-${ci}"><button type="submit" class="btn">＋ 新增</button></form>
+          <p class="add-msg" id="addmsg-${ci}" role="status"></p>`;
         return catHTML("pack", ci, c.name, cd, its.length, !!packOpen[ci], body); }).join("")}</div>
     <div class="card tips-card"><h2>${ico("note")}溫馨提醒：行李限重</h2>
       <div class="lug"><div><b>去程 12/13 JX314</b><span>託運 1 件（23 公斤）・手提 1 件（7 公斤）</span></div>
@@ -1063,6 +1067,9 @@ document.addEventListener("click", e=>{
   if(tc){ const ci=+tc.dataset.todocat, sec=tc.closest(".cat"), open=sec.dataset.open!=="true";
     sec.dataset.open=open; tc.setAttribute("aria-expanded",open); todoOpen[ci]=open; store.set("todoOpen",todoOpen); return; }
   const dc=e.target.closest("[data-delcustom]");
+  if(dc && dc.dataset.confirm!=="1"){ const nm=dc.getAttribute("aria-label").replace(/^刪除/,"");
+    dc.dataset.confirm="1"; dc.classList.add("confirm"); dc.setAttribute("aria-label","再按一次確認刪除"+nm); dc.innerHTML=ico("x")+"<span>再按一次刪除</span>";
+    clearTimeout(dc._t); dc._t=setTimeout(()=>{ dc.dataset.confirm=""; dc.classList.remove("confirm"); dc.setAttribute("aria-label","刪除"+nm); dc.innerHTML=ico("x"); },4000); return; }
   if(dc){ const [ci,id]=dc.dataset.delcustom.split("|"); const pc=packCustom(); pc[ci]=(pc[ci]||[]).filter(c=>String(c.id)!==id); store.set("packCustom",pc);
     const st=store.get("pack",{}); delete st[ci+"-c"+id]; store.set("pack",st); renderPack();
     const f=document.getElementById("add-"+ci); if(f) f.focus(); return; }
@@ -1102,10 +1109,17 @@ document.addEventListener("click", e=>{
 });
 document.addEventListener("submit", e=>{
   const f=e.target.closest("form[data-addcat]"); if(!f) return; e.preventDefault();
-  const inp=f.querySelector("input"), n=inp.value.trim(); if(!n){ inp.focus(); return; }
-  const ci=f.dataset.addcat, pc=packCustom(); (pc[ci]=pc[ci]||[]).push({id:Date.now().toString(36), n}); store.set("packCustom",pc);
+  const inp=f.querySelector("input"), n=inp.value.trim(), ci=f.dataset.addcat, msg=document.getElementById("addmsg-"+ci);
+  const warn = t => { msg.textContent=t; inp.setAttribute("aria-invalid","true"); inp.focus(); };
+  if(!n){ warn("請先輸入項目名稱，再按新增。"); return; }
+  if(packItems(+ci).some(it=>it.n.trim().toLowerCase()===n.toLowerCase())){ warn(`「${n}」已經在這一類裡了，換個名稱或直接勾選它。`); inp.select(); return; }
+  const pc=packCustom(); (pc[ci]=pc[ci]||[]).push({id:Date.now().toString(36), n}); store.set("packCustom",pc);
   packOpen[ci]=true; store.set("packOpen",packOpen); renderPack();
   const again=document.getElementById("add-"+ci); if(again) again.focus();
+});
+document.addEventListener("input", e=>{
+  const inp=e.target.closest("form[data-addcat] input"); if(!inp || !inp.hasAttribute("aria-invalid")) return;
+  inp.removeAttribute("aria-invalid"); const m=document.getElementById(inp.getAttribute("aria-describedby")); if(m) m.textContent="";
 });
 document.addEventListener("keydown", e=>{ if(e.key==="Escape" && document.getElementById("modal").dataset.open==="true") closeModal(); });
 document.addEventListener("change", e=>{
