@@ -581,10 +581,15 @@ const PACK = [
   {name:"衣著及穿搭", items:["內衣褲","外衣褲","外套","睡衣褲","襪子","皮帶","休閒鞋","飯店拖鞋","烘衣神器","髒衣袋"]},
   {name:"化妝品", items:["粉底棒","假睫毛","化妝棉","卸妝棉","卸妝蜜","眉毛夾","定妝噴霧","香水","髮蠟","定型噴霧","小剪刀","鯊魚夾"]},
   {name:"保養品", items:["化妝水","精華液","乳液","面霜","面膜"]},
-  {name:"衛生用品", items:["牙刷","牙膏","棉花棒","洗髮精","Femfresh","刮鬍刀","梳子","消臭元"]}
+  {name:"衛生用品", items:["牙刷","牙膏","棉花棒","洗髮精","Femfresh","刮鬍刀","梳子","消臭元"]},
+  {name:"JTTP", items:["護照",
+    {n:"個人證件照", d:"預設兩吋，可以多帶幾張，以防規定更改"},
+    {n:"一次審查通過確認信", d:"信中有申請 ID"},
+    {n:"4,000 日圓收入印紙", d:"在郵局或入管局附近的超商買，只能付現金"},
+    {n:"申請用信用卡", d:"忘了是哪張的話，可以多帶幾張讓人員確認"}]}
 ];
 const packCustom = () => store.get("packCustom", {});
-const packItems = ci => PACK[ci].items.map((n,i)=>({k:ci+"-"+i, n})).concat((packCustom()[ci]||[]).map(c=>({k:ci+"-c"+c.id, n:c.n, custom:c.id})));
+const packItems = ci => PACK[ci].items.map((x,i)=>typeof x==="string" ? {k:ci+"-"+i, n:x} : {k:ci+"-"+i, n:x.n, d:x.d}).concat((packCustom()[ci]||[]).map(c=>({k:ci+"-c"+c.id, n:c.n, custom:c.id})));
 const packTotal = () => PACK.reduce((s,_,ci)=>s+packItems(ci).length,0);
 const packDone = () => { const st=store.get("pack",{}); return PACK.reduce((s,_,ci)=>s+packItems(ci).filter(it=>st[it.k]).length,0); };
 
@@ -1031,7 +1036,7 @@ function renderPack(){
     <div class="cats">${PACK.map((c,ci)=>{ const its=packItems(ci), cd=its.filter(it=>st[it.k]).length;
         const body = `<div class="checks">${its.map(it=> it.custom
             ? `<div class="ck-row">${checkHTML("pack",it.k,it.n,"",null,st[it.k])}<button type="button" class="ck-del" data-delcustom="${ci}|${it.custom}" aria-label="刪除「${esc(it.n)}」">${ico("x")}</button></div>`
-            : checkHTML("pack",it.k,it.n,"",null,st[it.k])).join("")}</div>
+            : checkHTML("pack",it.k,it.n,it.d||"",null,st[it.k])).join("")}</div>
           <form class="add-item" data-addcat="${ci}"><label class="sr" for="add-${ci}">新增到「${esc(c.name)}」</label>
             <input type="text" id="add-${ci}" maxlength="40" placeholder="例如：暖暖包" autocomplete="off" enterkeyhint="done" aria-describedby="addmsg-${ci}"><button type="submit" class="btn">＋ 新增</button></form>
           <p class="add-msg" id="addmsg-${ci}" role="status"></p>`;
