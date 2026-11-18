@@ -1,7 +1,7 @@
 """回歸檢查：python3 tests/check.py [index.html]
 需要 Playwright（pip install playwright && playwright install chromium）。
 檢查項目：各寬度／深淺色下有沒有橫向捲動、JS 錯誤、新視窗連結的朗讀名稱、
-按鈕的可存取名稱、12/13 與 12/16 分組切換、打包自訂項目的兩段式刪除。"""
+按鈕的可存取名稱、12/13 與 12/16 分組切換、打包自訂項目與預設項目的兩段式刪除、預設項目還原。"""
 import asyncio, sys, os
 from playwright.async_api import async_playwright
 
@@ -52,14 +52,35 @@ async def main():
         await pg.fill("#add-0", "測試項目")
         await pg.press("#add-0", "Enter")
         await pg.wait_for_timeout(150)
-        await pg.click(".ck-del")
+        await pg.click("[data-delcustom]")
         await pg.wait_for_timeout(100)
-        if await pg.locator(".ck-row").count() != 1:
+        if await pg.locator("[data-delcustom]").count() != 1:
             problems.append("刪除第一次就刪掉了（應先確認）")
-        await pg.click(".ck-del")
+        await pg.click("[data-delcustom]")
         await pg.wait_for_timeout(150)
-        if await pg.locator(".ck-row").count() != 0:
+        if await pg.locator("[data-delcustom]").count() != 0:
             problems.append("刪除確認後項目仍在")
+        # 打包預設項目：勾選 → 兩段式刪除 → 重新整理後仍是刪掉的 → 還原後回來且不帶勾選
+        n0 = await pg.locator("#view-pack [data-delpack]").count()
+        await pg.click('label[for="pack-0-0"]')
+        await pg.click('[data-delpack="0-0"]')
+        await pg.wait_for_timeout(100)
+        if await pg.locator('[data-delpack="0-0"]').count() != 1:
+            problems.append("預設項目第一次按刪除就刪掉了（應先確認）")
+        await pg.click('[data-delpack="0-0"]')
+        await pg.wait_for_timeout(150)
+        await pg.reload()
+        await pg.wait_for_timeout(200)
+        if await pg.locator('[data-delpack="0-0"]').count() != 0 or await pg.locator("#view-pack [data-delpack]").count() != n0 - 1:
+            problems.append("預設項目刪除後重新整理又出現")
+        if await pg.evaluate("JSON.parse(localStorage.getItem('twc26:pack')||'{}')['0-0']"):
+            problems.append("刪除的預設項目勾選沒清掉")
+        await pg.click('[data-restorepack="0"]')
+        await pg.wait_for_timeout(150)
+        if await pg.locator('[data-delpack="0-0"]').count() != 1 or await pg.locator("[data-restorepack]").count() != 0:
+            problems.append("還原預設項目失敗")
+        if await pg.is_checked("#pack-0-0"):
+            problems.append("還原後的項目不該保留勾選")
         await b.close()
     seen = list(dict.fromkeys(problems))
     print("\n".join(seen) if seen else "全部通過")

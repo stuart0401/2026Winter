@@ -322,6 +322,7 @@ div.mv:not(.shx){flex-direction:column;align-items:stretch}
 .ck-del .ico{width:18px;height:18px}
 .ck-del.confirm{width:auto;padding:0 12px;gap:4px;display:inline-flex;align-items:center;border:2px solid var(--accent);border-radius:999px;color:var(--accent);font-size:13px;font-weight:700;white-space:nowrap}
 @media (hover:hover){.ck-del:hover{background:var(--chip);color:var(--accent)}}
+.restore-row{margin-top:12px}
 .add-item{display:flex;gap:8px;margin-top:14px}
 .add-item input{flex:1;min-width:0;min-height:44px;padding:0 14px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit;font-size:16px}
 .add-item input::placeholder{color:var(--soft)}
@@ -612,7 +613,9 @@ const PACK = [
     {n:"申請用信用卡", d:"忘了是哪張的話，可以多帶幾張讓人員確認"}]}
 ];
 const packCustom = () => store.get("packCustom", {});
-const packItems = ci => PACK[ci].items.map((x,i)=>typeof x==="string" ? {k:ci+"-"+i, n:x} : {k:ci+"-"+i, n:x.n, d:x.d}).concat((packCustom()[ci]||[]).map(c=>({k:ci+"-c"+c.id, n:c.n, custom:c.id})));
+const packHidden = () => store.get("packHidden", {});
+const packHiddenIn = ci => { const h=packHidden(); return PACK[ci].items.filter((_,i)=>h[ci+"-"+i]).length; };
+const packItems = ci => { const h=packHidden(); return PACK[ci].items.map((x,i)=>typeof x==="string" ? {k:ci+"-"+i, n:x} : {k:ci+"-"+i, n:x.n, d:x.d}).filter(it=>!h[it.k]).concat((packCustom()[ci]||[]).map(c=>({k:ci+"-c"+c.id, n:c.n, custom:c.id}))); };
 const packTotal = () => PACK.reduce((s,_,ci)=>s+packItems(ci).length,0);
 const packDone = () => { const st=store.get("pack",{}); return PACK.reduce((s,_,ci)=>s+packItems(ci).filter(it=>st[it.k]).length,0); };
 
@@ -1061,12 +1064,12 @@ function renderPrep(){
 let packOpen = store.get("packOpen", {});
 function renderPack(){
   const st = store.get("pack",{});
-  document.getElementById("view-pack").innerHTML = listHero("suitcase","打包清單",`${PACK.length} 大類、共 ${packTotal()} 項。裝進行李就打勾，也可以在每一類最下面新增自己的項目。`,packDone(),packTotal())
+  document.getElementById("view-pack").innerHTML = listHero("suitcase","打包清單",`${PACK.length} 大類、共 ${packTotal()} 項。裝進行李就打勾；用不到的項目可以按 ✕ 刪除，也可以在每一類最下面新增自己的項目。`,packDone(),packTotal())
     + `<div class="cats-tools"><span>點大類展開或收起</span><button type="button" class="btn" data-packall="1">${PACK.some((_,ci)=>packOpen[ci])?"全部收起":"全部展開"}</button></div>
     <div class="cats">${PACK.map((c,ci)=>{ const its=packItems(ci), cd=its.filter(it=>st[it.k]).length;
-        const body = `<div class="checks">${its.map(it=> it.custom
-            ? `<div class="ck-row">${checkHTML("pack",it.k,it.n,"",null,st[it.k])}<button type="button" class="ck-del" data-delcustom="${ci}|${it.custom}" aria-label="刪除「${esc(it.n)}」">${ico("x")}</button></div>`
-            : checkHTML("pack",it.k,it.n,it.d||"",null,st[it.k])).join("")}</div>
+        const hid=packHiddenIn(ci);
+        const body = `<div class="checks">${its.map(it=>`<div class="ck-row">${checkHTML("pack",it.k,it.n,it.d||"",null,st[it.k])}<button type="button" class="ck-del" ${it.custom?`data-delcustom="${ci}|${it.custom}"`:`data-delpack="${it.k}"`} aria-label="刪除「${esc(it.n)}」">${ico("x")}</button></div>`).join("")}</div>
+          ${hid?`<p class="restore-row"><button type="button" class="btn" data-restorepack="${ci}">還原這一類刪掉的 ${hid} 個預設項目</button></p>`:""}
           <form class="add-item" data-addcat="${ci}"><label class="sr" for="add-${ci}">新增到「${esc(c.name)}」</label>
             <input type="text" id="add-${ci}" maxlength="40" placeholder="例如：暖暖包" autocomplete="off" enterkeyhint="done" aria-describedby="addmsg-${ci}"><button type="submit" class="btn">＋ 新增</button></form>
           <p class="add-msg" id="addmsg-${ci}" role="status"></p>`;
@@ -1075,7 +1078,7 @@ function renderPack(){
       <div class="lug"><div><b>去程 12/13 JX314</b><span>託運 1 件（23 公斤）・手提 1 件（7 公斤）</span></div>
       <div><b>回程 12/19 JX315</b><span>託運 2 件（每件 23 公斤）・手提 1 件（7 公斤）</span></div></div>
       <p class="foot">回程可以多託運一件，伴手禮可以留到最後幾天再買。</p></div>
-    <button class="reset" type="button" data-reset="pack">清除勾選</button><p class="foot">勾選和自己新增的項目只存在這台裝置的瀏覽器裡，不會同步給其他人。</p>`;
+    <button class="reset" type="button" data-reset="pack">清除勾選</button><p class="foot">勾選、刪除和自己新增的項目只存在這台裝置的瀏覽器裡，不會同步給其他人，也不會影響別人的清單。</p>`;
 }
 
 /* ---------- nav & routing ---------- */
@@ -1109,10 +1112,16 @@ document.addEventListener("click", e=>{
   const tc=e.target.closest("[data-todocat]");
   if(tc){ const ci=+tc.dataset.todocat, sec=tc.closest(".cat"), open=sec.dataset.open!=="true";
     sec.dataset.open=open; tc.setAttribute("aria-expanded",open); todoOpen[ci]=open; store.set("todoOpen",todoOpen); return; }
-  const dc=e.target.closest("[data-delcustom]");
+  const dc=e.target.closest("[data-delcustom],[data-delpack]");
   if(dc && dc.dataset.confirm!=="1"){ const nm=dc.getAttribute("aria-label").replace(/^刪除/,"");
     dc.dataset.confirm="1"; dc.classList.add("confirm"); dc.setAttribute("aria-label","再按一次確認刪除"+nm); dc.innerHTML=ico("x")+"<span>再按一次刪除</span>";
     clearTimeout(dc._t); dc._t=setTimeout(()=>{ dc.dataset.confirm=""; dc.classList.remove("confirm"); dc.setAttribute("aria-label","刪除"+nm); dc.innerHTML=ico("x"); },4000); return; }
+  if(dc && dc.dataset.delpack){ const k=dc.dataset.delpack, ci=k.split("-")[0]; const h=packHidden(); h[k]=true; store.set("packHidden",h);
+    const st=store.get("pack",{}); delete st[k]; store.set("pack",st); renderPack();
+    const f=document.getElementById("add-"+ci); if(f) f.focus(); return; }
+  const rp=e.target.closest("[data-restorepack]");
+  if(rp){ const ci=rp.dataset.restorepack, h=packHidden(); Object.keys(h).forEach(k=>{ if(k.split("-")[0]===ci) delete h[k]; }); store.set("packHidden",h); renderPack();
+    const f=document.getElementById("add-"+ci); if(f) f.focus(); return; }
   if(dc){ const [ci,id]=dc.dataset.delcustom.split("|"); const pc=packCustom(); pc[ci]=(pc[ci]||[]).filter(c=>String(c.id)!==id); store.set("packCustom",pc);
     const st=store.get("pack",{}); delete st[ci+"-c"+id]; store.set("pack",st); renderPack();
     const f=document.getElementById("add-"+ci); if(f) f.focus(); return; }
