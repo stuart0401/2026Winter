@@ -133,6 +133,10 @@ button{font:inherit;color:inherit}
 .memo b{color:var(--accent)}
 .daymain{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
 .timeline{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:22px}
+.flow .groups{flex:none}
+.split{display:flex;flex-direction:column;gap:18px;padding:18px 0 4px;border-top:2px dashed var(--line)}
+.flow-hd{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:900}
+.flow-hd .ico,.flow-hd svg{width:20px;height:20px;flex:none}
 .side{flex:1 1 290px;min-width:0;display:flex;flex-direction:column;gap:18px}
 .side .card{padding:18px 20px;display:flex;flex-direction:column;gap:10px}
 .side h2{font-size:18px;font-weight:900;display:flex;align-items:center;gap:8px}
@@ -444,15 +448,26 @@ const CHECK = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 
 /* ---------- data ---------- */
 /* card item: {t,title,note,art,spot,opt,group}; move item: {t,title,note,m:<icon>} */
 const DAYS = [
-  {id:"d1", date:"13", wd:"日", title:"抵達日", sub:"抵達成田 → 銀座", art:"d_arrive", seal:"", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"12/13、12/15–12/18 住宿",
-   items:[
+  {id:"d1", date:"13", wd:"日", title:"抵達日", sub:"抵達成田 → 銀座；大邱組先辦 JTTP 二次審查", art:"d_arrive", seal:"", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"12/13、12/15–12/18 住宿",
+   pre:[
     {t:"09:15", title:"JX314 台中起飛", note:"星宇冬季班表，請以電子機票為準", m:"plane"},
-    {t:"13:25", title:"抵達成田第 2 航廈", note:"入境、領行李約 1 小時", m:"plane"},
-    {t:"14:40", alt:true, title:"機場 → 飯店", opts:[
-      {tag:"A", m:"train", title:"京成 Access 特急 → 東銀座，步行到飯店", note:"直通淺草線免轉車，約 1.5 小時；東銀座站步行到飯店約 10 分鐘。出發前查班次。", q:"東銀座駅", ql:"東銀座站"},
-      {tag:"B", m:"car", title:"機場接送（專車）直達飯店", note:"Google 地圖模擬 12/13（日）14:40 出發：車程約 50 分–1 小時 15 分，約 16:00 前後抵達。行李多、人多時最省力；請提前預約。", dir:"https://www.google.com/maps/dir/%E6%88%90%E7%94%B0%E5%9B%BD%E9%9A%9B%E7%A9%BA%E6%B8%AF+%E7%AC%AC2%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/35.6639906,139.7716542/data=!4m6!4m5!2m3!6e0!7e2!8j1797172800!3e0", ql:"機場到飯店的車程"}]},
-    {t:"16:30", title:"TOSEI酒店 check-in", note:"可可尼築地銀座，之後 12/15–12/18 也住這裡。搭接送的話會早一點到。", art:"ginza"},
-    {t:"17:30", title:"散步、晚餐", note:"在銀座一帶散步、吃晚餐。", art:"dinnerwalk"},
+    {t:"13:25", title:"抵達成田第 2 航廈", note:"入境、領行李約 1 小時", m:"plane"}
+   ],
+   groups:{
+    A:{name:"JTTP 二次審查 → 京成 Access", items:[
+      {t:"14:30", title:"JTTP 二次審查", note:"入境、領行李後在成田機場辦理，暫估需時約 1 小時。", art:"immigration"},
+      {t:"15:52", title:"京成 Access 特急 → 東銀座", note:"直通淺草線免轉車。Google 地圖查 12/13（日）班次：15:52 發車、17:16 到東銀座，東銀座站步行到飯店約 10 分鐘。出發前再查一次。", m:"train"},
+      {t:"17:30", title:"TOSEI酒店 check-in", note:"可可尼築地銀座，之後 12/15–12/18 也住這裡。", art:"ginza"}
+    ]},
+    B:{name:"直接到飯店", items:[
+      {t:"14:40", alt:true, title:"機場 → 飯店", opts:[
+        {tag:"A", m:"train", title:"京成 Access 特急 → 東銀座，步行到飯店", note:"直通淺草線免轉車，約 1.5 小時；東銀座站步行到飯店約 10 分鐘。出發前查班次。", q:"東銀座駅", ql:"東銀座站"},
+        {tag:"B", m:"car", title:"機場接送（專車）直達飯店", note:"Google 地圖模擬 12/13（日）14:40 出發：車程約 50 分–1 小時 15 分，約 16:00 前後抵達。行李多、人多時最省力；請提前預約。", dir:"https://www.google.com/maps/dir/%E6%88%90%E7%94%B0%E5%9B%BD%E9%9A%9B%E7%A9%BA%E6%B8%AF+%E7%AC%AC2%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/35.6639906,139.7716542/data=!4m6!4m5!2m3!6e0!7e2!8j1797172800!3e0", ql:"機場到飯店的車程"}]},
+      {t:"16:30", title:"TOSEI酒店 check-in", note:"可可尼築地銀座，之後 12/15–12/18 也住這裡。搭接送的話會早一點到。", art:"ginza"}
+    ]}
+   },
+   post:[
+    {t:"18:00", title:"散步、晚餐", note:"兩組在飯店會合，一起在銀座一帶散步、吃晚餐。", art:"dinnerwalk"},
     {t:"晚上", title:"銀座 伊東屋 本店", note:"週日 10:00–20:00（營業時間暫供參考）", art:"stationery", opt:"選配"}
    ]},
   {id:"d2", date:"14", wd:"一", title:"輕井澤", sub:"英迪格 check-in、星野區的夜晚", art:"d_hoshino", seal:"pine", stay:"輕井澤英迪格酒店", stayArt:"firepit", stayNote:"check-in 15:00・check-out 11:00・接駁車免預約",
@@ -564,7 +579,8 @@ const spotsDone = () => { const st = store.get("spots",{}); return LIVE.filter(o
 const TODO = [
   {name:"待議", hint:"還沒決定、需要大家討論。決定了就打勾。", items:[
     {id:"pickup", n:"12/13、12/19 是否預約成田機場接送", d:"10 人座、中文司機，約 22,000 日圓／趟。"},
-    {id:"meet", n:"12/16 晚上在澀谷會合，還是改在原宿或中目黑／代官山", d:"考量澀谷站周邊太大，車站和人潮對二老不友善。"}]},
+    {id:"meet", n:"12/16 晚上在澀谷會合，還是改在原宿或中目黑／代官山", d:"考量澀谷站周邊太大，車站和人潮對二老不友善。"},
+    {id:"split13", n:"12/13 是否分組行動", d:"大邱組可在先入境時完成 JTTP 二次審查，兩組分開前往飯店"}]},
   {name:"待辦", hint:"出發前要處理的事。辦好就打勾。", items:[
     {id:"ticket", n:"確認電子機票時間", d:"冬季班表：JX314 09:15→13:25、JX315 14:25→17:55"},
     {id:"pickup-tw", n:"預約大邱及錦祥街機場接送", d:"兩地分開搭車前往"},
@@ -794,25 +810,32 @@ function renderHome(){
 
 function renderTrip(){
   const d = DAYS.find(x=>x.id===curDay), idx = DAYS.indexOf(d); CUR_DAY_OBJ = d;
-  const all = d.groups ? d.groups.A.items.concat(d.groups.B.items) : d.items;
   const chips = `<button type="button" class="chip today" data-today="1">${ico("cal")}今天</button>` +
     DAYS.map(x=>`<button type="button" class="chip" data-day="${x.id}" aria-pressed="${x.id===curDay}">12/${x.date}<small>${x.wd}</small></button>`).join("");
   let main;
-  if(d.groups){
-    const col = g => `<div class="gcol" data-g="${g}"><h2>${gBadge(g)}<span><span class="gname">${GNAME[g]}</span>${esc(d.groups[g].name)}</span></h2>
-      ${d.groups[g].note?`<p class="gnote">${esc(d.groups[g].note)}</p>`:""}${d.groups[g].items.map(it=>itemHTML(it,g)).join("")}</div>`;
-    main = `<div class="seg" role="group" aria-label="切換組別">${["A","B"].map(g=>`<button type="button" data-g="${g}" aria-pressed="${curGroup===g}">${GICON[g]}<span class="sg-t">${GNAME[g]}<small>${esc(d.groups[g].name)}</small></span></button>`).join("")}</div>
-      <div class="daymain"><div class="groups" data-show="${curGroup}">${col("A")}${col("B")}</div>${d.stay?`<aside class="side">${stayCard(d)}</aside>`:""}</div>`;
-  } else {
-    const st = store.get("spots",{});
-    const daySpots = LIVE.filter(o=>o.s.days.includes(d.id));
-    const side = `<aside class="side">
+  const st = store.get("spots",{});
+  const daySpots = LIVE.filter(o=>o.s.days.includes(d.id));
+  const fullSide = `<aside class="side">
       ${daySpots.length?`<div class="card"><h2>今天的清單地點</h2><p class="foot">去過就打勾，和「行程確認」同步</p>${daySpots.map(o=>checkHTML("spots",o.i,o.s.n,"",null,st[o.i])).join("")}</div>`:""}
       ${d.shuttle?shuttleCard():""}
       ${d.tips?`<div class="card"><h2>${ico("note")}小提醒</h2>${d.tips.map(t=>`<p style="font-size:14.5px">・${esc(t)}</p>`).join("")}</div>`:""}
       ${d.stay?stayCard(d):""}
     </aside>`;
-    main = `<div class="daymain"><div class="timeline">${d.items.map(it=>itemHTML(it)).join("")}</div>${side}</div>`;
+  if(d.groups){
+    const col = g => `<div class="gcol" data-g="${g}"><h2>${gBadge(g)}<span><span class="gname">${GNAME[g]}</span>${esc(d.groups[g].name)}</span></h2>
+      ${d.groups[g].note?`<p class="gnote">${esc(d.groups[g].note)}</p>`:""}${d.groups[g].items.map(it=>itemHTML(it,g)).join("")}</div>`;
+    const seg = `<div class="seg" role="group" aria-label="切換組別">${["A","B"].map(g=>`<button type="button" data-g="${g}" aria-pressed="${curGroup===g}">${GICON[g]}<span class="sg-t">${GNAME[g]}<small>${esc(d.groups[g].name)}</small></span></button>`).join("")}</div>`;
+    const groups = `<div class="groups" data-show="${curGroup}">${col("A")}${col("B")}</div>`;
+    if(d.pre || d.post){
+      main = `<div class="daymain"><div class="timeline flow">${(d.pre||[]).map(it=>itemHTML(it)).join("")}
+        <section class="split" aria-labelledby="split-h"><h2 class="flow-hd" id="split-h">${ico("shuffle")}兩組分開行動</h2>${seg}${groups}</section>
+        ${d.post?`<h2 class="flow-hd">${ico("shuffle")}兩組會合</h2>${d.post.map(it=>itemHTML(it)).join("")}`:""}</div>${fullSide}</div>`;
+    } else {
+      main = `${seg}
+      <div class="daymain">${groups}${d.stay?`<aside class="side">${stayCard(d)}</aside>`:""}</div>`;
+    }
+  } else {
+    main = `<div class="daymain"><div class="timeline">${d.items.map(it=>itemHTML(it)).join("")}</div>${fullSide}</div>`;
   }
   document.getElementById("view-trip").innerHTML = `
     <div class="chips" role="group" aria-label="選擇日期">${chips}</div>
