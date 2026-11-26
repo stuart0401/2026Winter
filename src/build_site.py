@@ -6,7 +6,7 @@ from gen import LIGHT, DARK, FILLS, ICON
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "index.html")
 art_json = json.dumps({k: f() for k, f in ALL.items()}, ensure_ascii=False)
 icon_json = json.dumps(dict(ICON, car='<path d="M4 15.5V12l2-5h12l2 5v3.5"></path><rect x="3" y="12" width="18" height="5" rx="1.5"></rect><circle cx="7.5" cy="18" r="1.8"></circle><circle cx="16.5" cy="18" r="1.8"></circle>', bike='<circle cx="6" cy="16" r="3.6"></circle><circle cx="18" cy="16" r="3.6"></circle><path d="M6 16l4-7h6l2 7M10 9l3 7h-7M13 6h3"></path>', tag='<path d="M5.5 8h13l-1.2 12.5H6.7z"></path><path d="M9 10.5V7a3 3 0 0 1 6 0v3.5"></path>', plane='<path d="M2.5 13.5 21 7.5c1.2-.4 1.9.9.8 1.6L6 17.5 3.5 17z"></path><path d="M11 11 8.5 5l2-.6 5 4.8M10 15.4 9 20l2 .2 3.6-6.7"></path>',
-                                camera='<path d="M4 8h3l1.6-2.5h6.8L17 8h3v11H4z"></path><circle cx="12" cy="13.2" r="3.6"></circle>', share='<path d="M12 15V3.5M7.5 8 12 3.5 16.5 8"></path><path d="M5 12v8h14v-8"></path>', dl='<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"></path><path d="M5 19.5h14"></path>', shuffle='<path d="M4 7h3.5c4 0 5 10 9 10H20M17 14l3 3-3 3M4 17h3.5c1.4 0 2.4-1.2 3.3-2.8M14 9.2C14.9 7.9 15.6 7 17 7h3M17 4l3 3-3 3"></path>', trash='<path d="M5 7h14M10 7V4.5h4V7M7 7l1 12.5h8L17 7"></path>', x='<path d="M6 6l12 12M18 6 6 18"></path>', map='<path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6z"></path><path d="M9 4v14M15 6v14"></path>', ext='<path d="M14 5h5v5M19 5l-8 8"></path><path d="M17 14v5H5V7h5"></path>', walk='<circle cx="13" cy="4.5" r="1.8"></circle><path d="M10 21l2-6 3 3v3M9 12l2-4 3 1 2 3M11 8l-3 2-1 3"></path>'), ensure_ascii=False)
+                                camera='<path d="M4 8h3l1.6-2.5h6.8L17 8h3v11H4z"></path><circle cx="12" cy="13.2" r="3.6"></circle>', share='<path d="M12 15V3.5M7.5 8 12 3.5 16.5 8"></path><path d="M5 12v8h14v-8"></path>', dl='<path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"></path><path d="M5 19.5h14"></path>', shuffle='<path d="M4 7h3.5c4 0 5 10 9 10H20M17 14l3 3-3 3M4 17h3.5c1.4 0 2.4-1.2 3.3-2.8M14 9.2C14.9 7.9 15.6 7 17 7h3M17 4l3 3-3 3"></path>', trash='<path d="M5 7h14M10 7V4.5h4V7M7 7l1 12.5h8L17 7"></path>', x='<path d="M6 6l12 12M18 6 6 18"></path>', map='<path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6z"></path><path d="M9 4v14M15 6v14"></path>', ext='<path d="M14 5h5v5M19 5l-8 8"></path><path d="M17 14v5H5V7h5"></path>', wallet='<path d="M4 7.5h14.5a1.5 1.5 0 0 1 1.5 1.5v9.5a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 18.5z"></path><path d="M4 7.5 15 4l1 3.5"></path><path d="M20 11.5h-4a1.75 1.75 0 0 0 0 3.5h4"></path>', walk='<circle cx="13" cy="4.5" r="1.8"></circle><path d="M10 21l2-6 3 3v3M9 12l2-4 3 1 2 3M11 8l-3 2-1 3"></path>'), ensure_ascii=False)
 fills = ''.join(f'.f-{c}{{fill:var(--{c})}}' for c in FILLS)
 
 TEMPLATE = r'''<!DOCTYPE html>
@@ -323,6 +323,40 @@ div.mv:not(.shx){flex-direction:column;align-items:stretch}
 .ck-del.confirm{width:auto;padding:0 12px;gap:4px;display:inline-flex;align-items:center;border:2px solid var(--accent);border-radius:999px;color:var(--accent);font-size:13px;font-weight:700;white-space:nowrap}
 @media (hover:hover){.ck-del:hover{background:var(--chip);color:var(--accent)}}
 .restore-row{margin-top:12px}
+.led-sum{padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.led-tots{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.led-tots div{background:var(--chip);border-radius:14px;padding:10px 14px;min-width:0}
+.led-tots span{display:block;font-size:13px;color:var(--soft);font-weight:700}
+.led-tots b{display:block;font-size:clamp(19px,5vw,26px);font-weight:900;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.led-rate{display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:14.5px;font-weight:700}
+.led-rate input,.led-in,.led-cur{min-height:44px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit;font-size:16px}
+.led-rate input{width:120px;padding:0 12px;text-align:right}
+.led-all{font-size:14px;font-weight:700}
+.led-exp{display:flex;flex-wrap:wrap;gap:10px}.led-exp .btn{flex:1 1 140px}
+.led-sub{font-size:14px;font-weight:700;padding-top:10px;font-variant-numeric:tabular-nums}
+.led-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 0;border-bottom:1.5px dotted var(--soft)}
+.led-nm{flex:1 1 200px;min-width:0}
+.led-t{font-size:15px;font-weight:500;line-height:1.4;overflow-wrap:anywhere}.led-t .tag{font-size:12px;padding:1px 8px;margin-right:2px;vertical-align:1px}
+.led-nm small{display:block;font-size:13px;color:var(--soft);line-height:1.4}
+.led-amt{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px;margin-left:auto}
+.led-in{width:112px;padding:0 10px;text-align:right;font-variant-numeric:tabular-nums}
+.led-in::placeholder,.led-rate input::placeholder{color:var(--soft);font-size:14px}
+.led-in[aria-invalid="true"],.led-rate input[aria-invalid="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.led-cur{padding:0 6px}
+#ledprint{display:none}
+@media print{
+  @page{size:A4;margin:14mm}
+  body.printing{background:#fff!important;padding:0!important}
+  body.printing>*:not(#ledprint){display:none!important}
+  body.printing #ledprint{display:block;color:#111;font-family:var(--font);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #ledprint h1{font-size:20pt;margin:0 0 2pt}#ledprint .meta{font-size:9.5pt;color:#555;margin:0 0 10pt}
+  #ledprint table{width:100%;border-collapse:collapse;font-size:10pt;margin-bottom:12pt}
+  #ledprint th,#ledprint td{text-align:left;padding:4pt 6pt;border-bottom:.6pt solid #bbb;vertical-align:top}
+  #ledprint thead th{background:#efe4d0;border-bottom:1pt solid #555}
+  #ledprint tr.lsec td{background:#f6efe3;font-weight:700;border-top:1pt solid #888}
+  #ledprint td.d{color:#555;font-size:9pt}#ledprint .main{table-layout:fixed}#ledprint .main td:nth-child(3),#ledprint .main th:nth-child(3){white-space:nowrap}#ledprint .n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  #ledprint tr{break-inside:avoid}#ledprint .tot{width:auto;min-width:50%;margin-left:auto}#ledprint .tot th{font-weight:700}
+}
 .add-item{display:flex;gap:8px;margin-top:14px}
 .add-item input{flex:1;min-width:0;min-height:44px;padding:0 14px;border:2px solid var(--ink);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit;font-size:16px}
 .add-item input::placeholder{color:var(--soft)}
@@ -365,7 +399,7 @@ div.mv:not(.shx){flex-direction:column;align-items:stretch}
 
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:0 12px calc(12px + env(safe-area-inset-bottom));pointer-events:none}
-.nav-in{pointer-events:auto;max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:6px;background:var(--card);border:2.5px solid var(--ink);border-radius:28px;box-shadow:0 5px 0 var(--line),0 14px 34px rgba(20,16,12,.18)}
+.nav-in{pointer-events:auto;max-width:640px;margin:0 auto;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;padding:6px;background:var(--card);border:2.5px solid var(--ink);border-radius:28px;box-shadow:0 5px 0 var(--line),0 14px 34px rgba(20,16,12,.18)}
 .nav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;min-height:44px;border-radius:20px;text-decoration:none;font-size:12px;font-weight:700;white-space:nowrap;color:var(--soft)}
 .nav a .ico{width:22px;height:22px}
 .nav a[aria-current="page"]{background:var(--accentbg);color:var(--onaccent);box-shadow:inset 0 0 0 2px var(--ink)}
@@ -425,6 +459,7 @@ __DEFS__
     <section class="view" id="view-spots" aria-label="行程確認清單"></section>
     <section class="view" id="view-prep" aria-label="待議及待辦"></section>
     <section class="view" id="view-pack" aria-label="打包清單"></section>
+    <section class="view" id="view-ledger" aria-label="記帳"></section>
   </main>
 </div>
 <div class="modal" id="modal" data-open="false"><button type="button" class="modal-bg" data-close="1" aria-label="關閉" tabindex="-1"></button><div class="modal-box" id="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title"></div></div>
@@ -468,14 +503,14 @@ const DAYS = [
       {t:"17:30", title:"TOSEI酒店 check-in", note:"可可尼築地銀座，之後 12/15–12/18 也住這裡。", art:"ginza"}
     ]},
     B:{name:"直接到飯店", items:[
-      {t:"14:40", alt:true, title:"機場 → 飯店", opts:[
+      {t:"14:40", alt:true, title:"機場 → 飯店", led:{d:"京成 Access，或機場接送專車（約 22,000 日圓／趟，待議）"}, opts:[
         {tag:"A", m:"train", title:"京成 Access 特急 → 東銀座，步行到飯店", note:"直通淺草線免轉車，約 1.5 小時；東銀座站步行到飯店約 10 分鐘。出發前查班次。", q:"東銀座駅", ql:"東銀座站"},
         {tag:"B", m:"car", title:"機場接送（專車）直達飯店", note:"Google 地圖模擬 12/13（日）14:40 出發：車程約 50 分–1 小時 15 分，約 16:00 前後抵達。行李多、人多時最省力；請提前預約。", dir:"https://www.google.com/maps/dir/%E6%88%90%E7%94%B0%E5%9B%BD%E9%9A%9B%E7%A9%BA%E6%B8%AF+%E7%AC%AC2%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/35.6639906,139.7716542/data=!4m6!4m5!2m3!6e0!7e2!8j1797172800!3e0", ql:"機場到飯店的車程"}]},
       {t:"16:30", title:"TOSEI酒店 check-in", note:"可可尼築地銀座，之後 12/15–12/18 也住這裡。搭接送的話會早一點到。", art:"ginza"}
     ]}
    },
    post:[
-    {t:"18:00", title:"散步、晚餐", note:"兩組在飯店會合，一起在銀座一帶散步、吃晚餐。", art:"dinnerwalk"},
+    {t:"18:00", title:"散步、晚餐", led:"銀座晚餐", note:"兩組在飯店會合，一起在銀座一帶散步、吃晚餐。", art:"dinnerwalk"},
     {t:"晚上", title:"銀座 伊東屋 本店", note:"週日 10:00–20:00（營業時間暫供參考）", art:"stationery", opt:"選配"}
    ]},
   {id:"d2", date:"14", wd:"一", title:"輕井澤", sub:"英迪格 check-in、星野區的夜晚", art:"d_hoshino", seal:"pine", stay:"輕井澤英迪格酒店", stayArt:"firepit", stayNote:"check-in 15:00・check-out 11:00・接駁車免預約",
@@ -483,12 +518,12 @@ const DAYS = [
    tips:["星野區晚上計程車少，回程請先請店家或飯店幫忙叫車。","燭光夜在戶外，晚上可能到零度以下，請穿暖。","星野區巴士班次少，來回都建議搭計程車。"], shuttle:true,
    items:[
     {t:"上午", title:"東京自由活動、整理行李", note:"大件行李寄放 TOSEI，只帶一晚的隨身行李。", m:"bag"},
-    {t:"12:30", title:"東京車站", note:"在丸之內紅磚站舍拍照，買鐵路便當當午餐。", art:"tokyostation", spot:true},
+    {t:"12:30", title:"東京車站", led:"東京車站 鐵路便當", note:"在丸之內紅磚站舍拍照，買鐵路便當當午餐。", art:"tokyostation", spot:true},
     {t:"13:20", title:"北陸新幹線 → 輕井澤", note:"約 1 小時 10 分，14:30 前後抵達。建議先劃位，出發前查班次。", m:"train"},
     {t:"14:50", sh:"to", title:"英迪格酒店接駁車 → 酒店", note:"輕井澤站南口上車（暢貨中心旁、樓梯下計程車站附近），約 5 分鐘，免預約。14:50 是第一班。", m:"bus"},
-    {t:"15:00", title:"輕井澤英迪格酒店", note:"check-in、放行李。可以泡大浴場、到焚火庭園烤火。", art:"firepit", spot:true},
+    {t:"15:00", title:"輕井澤英迪格酒店", led:false, note:"check-in、放行李。可以泡大浴場、到焚火庭園烤火。", art:"firepit", spot:true},
     {t:"15:30", title:"計程車 → 榆樹街小鎮", note:"約 10 分鐘（6.6 公里），可請飯店櫃台叫車。", m:"taxi"},
-    {t:"15:45", title:"榆樹街小鎮（Harunire Terrace）", note:"12 月有聖誕燈飾。逛街、喝咖啡。", art:"harunire"},
+    {t:"15:45", title:"榆樹街小鎮（Harunire Terrace）", led:"榆樹街小鎮 逛街、咖啡", note:"12 月有聖誕燈飾。逛街、喝咖啡。", art:"harunire"},
     {t:"17:30", title:"榆樹街小鎮晚餐", note:"在榆樹街小鎮一帶吃晚餐。", m:"bowl"},
     {t:"19:30", title:"輕井澤高原教會", note:"榆樹街小鎮步行約 7 分鐘。白天參觀時間 10:00–17:00，晚上教會一帶是燭光夜會場。不參加燭光夜的話，改在晚餐前（17:00 前）先來看教會。", art:"woodchurch", extra:{tag:"晚上選配", title:"聖誕燭光夜", note:"「星降る森のクリスマス」，2026 年 11/29–12/25、19:30–21:30，免費入場。12/14（一）不用抽選，但要事前登錄（11/27 13:00 開放）。", link:{href:"https://candle.karuizawachurch.org/christmas/", label:"燭光夜官網"}}},
     {t:"21:30", title:"計程車回英迪格酒店", note:"約 12 分鐘（6.9 公里）。晚上車少，請先請店家或飯店叫車。", m:"taxi"}
@@ -498,17 +533,17 @@ const DAYS = [
    items:[
     {t:"早上", title:"英迪格早餐", note:"吃完早餐、泡個湯再 check-out。", art:"morning"},
     {t:"10:00", sh:"from", title:"check-out，搭英迪格接駁車 → 輕井澤站", note:"約 5 分鐘到南口。另有 9:00、11:00、12:00 班", m:"bus"},
-    {t:"10:10", title:"寄放行李、租自行車", note:"行李放車站置物櫃。北口步行約 3 分鐘的白貓自行車（白ネコサイクル）租車，營業 9:00–17:00。路面結冰或下雪就改搭巴士（約 4 分鐘）。", m:"bike"},
-    {t:"10:25", title:"APPLE PIE lab 軽井沢", note:"沿輕井澤本通騎約 1.7 公里、10 分鐘內。就在舊輕井澤銀座通入口、圓環旁，推薦現填的蘋果卡士達派。", art:"applepie"},
+    {t:"10:10", title:"寄放行李、租自行車", led:{d:"車站置物櫃＋白貓自行車"}, note:"行李放車站置物櫃。北口步行約 3 分鐘的白貓自行車（白ネコサイクル）租車，營業 9:00–17:00。路面結冰或下雪就改搭巴士（約 4 分鐘）。", m:"bike"},
+    {t:"10:25", title:"APPLE PIE lab 軽井沢", led:true, note:"沿輕井澤本通騎約 1.7 公里、10 分鐘內。就在舊輕井澤銀座通入口、圓環旁，推薦現填的蘋果卡士達派。", art:"applepie"},
     {t:"11:00", title:"舊輕井澤銀座通散步", note:"冬季部分店家休息或縮短營業。", art:"street"},
-    {t:"11:40", title:"BOULANGERIE ASANOYA", note:"淺野屋舊道本店。麵包當點心或伴手禮。", art:"bread"},
+    {t:"11:40", title:"BOULANGERIE ASANOYA", led:true, note:"淺野屋舊道本店。麵包當點心或伴手禮。", art:"bread"},
     {t:"12:20", title:"午餐", note:"舊輕銀座一帶", m:"bowl"},
     {t:"13:20", title:"森之教堂（森のチャペル 軽井沢礼拝堂）", note:"回車站的路上，騎車約 3 分鐘。12/15 是週二，教堂公休（週二、三休），只能在外面拍照。旁邊就是新藝術博物館的「白樺與苔之森」教堂，也可以在路邊拍照。", art:"forestchapel"},
-    {t:"13:35", title:"輕井澤新藝術博物館", note:"週二 10:00–17:00（週一休館）。1 樓藝廊和書店咖啡免費；2 樓企畫展成人 2,000 日圓，含隈研吾設計的「白樺與苔之森」教堂導覽（每天 2 場、限 10 人）。", art:"artmuseum"},
-    {t:"14:45", title:"還自行車、取行李", note:"博物館騎回車站約 3 分鐘，17:00 前要還車。", m:"bike"},
-    {t:"15:00", title:"車站一帶逛街", note:"南口旁就是暢貨中心（王子購物廣場），裡面有 MUJI。", m:"walk"},
+    {t:"13:35", title:"輕井澤新藝術博物館", led:{d:"2 樓企畫展成人 2,000 日圓；1 樓免費"}, note:"週二 10:00–17:00（週一休館）。1 樓藝廊和書店咖啡免費；2 樓企畫展成人 2,000 日圓，含隈研吾設計的「白樺與苔之森」教堂導覽（每天 2 場、限 10 人）。", art:"artmuseum"},
+    {t:"14:45", title:"還自行車、取行李", led:false, note:"博物館騎回車站約 3 分鐘，17:00 前要還車。", m:"bike"},
+    {t:"15:00", title:"車站一帶逛街", led:true, note:"南口旁就是暢貨中心（王子購物廣場），裡面有 MUJI。", m:"walk"},
     {t:"16:00", title:"北陸新幹線回東京", note:"約 1 小時 10 分。出發前查班次、劃位。", m:"train"},
-    {t:"17:15", title:"東京車站", note:"站內商店街、買伴手禮。", art:"tokyostation", spot:true, shop:"tokyo"},
+    {t:"17:15", title:"東京車站", led:"東京車站 伴手禮", note:"站內商店街、買伴手禮。", art:"tokyostation", spot:true, shop:"tokyo"},
     {t:"晚上", title:"回 TOSEI", note:"取回寄放行李、重新 check-in", m:"bed"}
    ]},
   {id:"d4", date:"16", wd:"三", title:"分組日", sub:"大邱組 入管局・東京車站・澀谷／三口組 明治神宮・中目黑", art:"d_split", seal:"b", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"18:00 兩組在澀谷會合吃晚餐",
@@ -516,13 +551,13 @@ const DAYS = [
     A:{name:"入管局 → 澀谷", items:[
       {t:"07:30", title:"出發 → JR 品川站港南口", note:"淺草線往品川一帶，約 30 分鐘", m:"train"},
       {t:"08:15", title:"都巴士「品99」", note:"在「東京出入国在留管理局前」下車，下車就在門口", m:"bus"},
-      {t:"08:30", title:"東京出入國在留管理局", note:"開門前排隊、辦理手續。受理時間平日 9:00–16:00，越早到越好。", art:"immigration", spot:true},
+      {t:"08:30", title:"東京出入國在留管理局", led:false, note:"開門前排隊、辦理手續。受理時間平日 9:00–16:00，越早到越好。", art:"immigration", spot:true},
       {t:"辦完後", title:"回品川站 → JR 到東京車站", note:"品川站搭 JR 山手線或京濱東北線，約 10 分鐘", m:"train"},
       {t:"12:00", title:"與日文老師午餐有約", note:"在東京車站一帶。", m:"bowl"},
       {t:"13:30", title:"JR 山手線到澀谷", note:"東京車站到澀谷約 25 分鐘", m:"train"},
       {t:"14:00", title:"Coffee & Cake SHU Premium Shibuya-Ekimae", note:"下午茶休息一下。", art:"cake", spot:true},
       {t:"接著", title:"Tower Records 澀谷店", note:"澀谷站八公口步行約 5 分鐘。營業約 11:00–22:00，晚到也逛得到。", art:"records", spot:true},
-      {t:"18:00", title:"在澀谷與三口組會合吃晚餐", note:"", m:"bowl"}
+      {t:"18:00", title:"在澀谷與三口組會合吃晚餐", led:{n:"澀谷晚餐", d:"兩組會合", all:true}, note:"", m:"bowl"}
     ]},
     B:{name:"明治神宮 → 中目黑", note:"三口組不用去入管局、SHU 和 Tower Records。", items:[
       {t:"08:30", title:"出發 → 原宿", note:"", m:"train"},
@@ -530,19 +565,19 @@ const DAYS = [
       {t:"11:00", title:"表參道／原宿逛街、午餐", note:"", m:"walk", shop:"harajuku"},
       {t:"14:00", title:"星巴克臻選® 東京烘焙工坊", note:"中目黑。營業 7:00–22:00；中目黑站步行約 14 分鐘。", art:"roastery", spot:true},
       {t:"16:30", title:"中目黑／代官山自由逛", note:"", m:"walk", shop:"nakameguro"},
-      {t:"18:00", title:"到澀谷與大邱組會合", note:"中目黑到澀谷搭東急東橫線一站", m:"bowl", shop:"shibuya"}
+      {t:"18:00", title:"到澀谷與大邱組會合", led:"東急東橫線 中目黑 → 澀谷", note:"中目黑到澀谷搭東急東橫線一站", m:"bowl", shop:"shibuya"}
     ]}
    }},
   {id:"d5", date:"17", wd:"四", title:"東京大學＋teamLab", sub:"本鄉校區、麻布台Hills", art:"d_ginkgo", seal:"", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"日比谷線從神谷町可直達築地",
    items:[
-    {t:"09:30", title:"東京大學本鄉校區", note:"搭地鐵到本鄉三丁目或東大前。看赤門、安田講堂、三四郎池。", art:"todai", spot:true},
+    {t:"09:30", title:"東京大學本鄉校區", led:false, note:"搭地鐵到本鄉三丁目或東大前。看赤門、安田講堂、三四郎池。", art:"todai", spot:true},
     {t:"12:00", title:"本鄉一帶午餐", note:"", m:"bowl"},
-    {t:"14:00", title:"teamLab Borderless", note:"麻布台Hills，神谷町站 5 號出口直通（日比谷線從築地可直達）。10:00–21:00，最後入場 20:00；成人 3,800 日圓起。請先上網買指定時段票。", art:"teamlab", spot:true},
+    {t:"14:00", title:"teamLab Borderless", led:{n:"teamLab Borderless 門票", d:"成人 3,800 日圓起，指定時段票"}, note:"麻布台Hills，神谷町站 5 號出口直通（日比谷線從築地可直達）。10:00–21:00，最後入場 20:00；成人 3,800 日圓起。請先上網買指定時段票。", art:"teamlab", spot:true},
     {t:"傍晚", title:"晚餐", note:"在麻布台Hills 吃，或回銀座", m:"bowl"}
    ]},
   {id:"d6", date:"18", wd:"五", title:"彈性及購物日", sub:"行程待定", art:"d_shopping", seal:"", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"最後一晚，可先整理行李",
    items:[
-    {t:"全天", title:"自由活動、購物", note:"行程待定", m:"walk"},
+    {t:"全天", title:"自由活動、購物", led:true, note:"行程待定", m:"walk"},
     {t:"下午", title:"ASICS Walking 銀座インズ店", note:"ASICS 的健走鞋專門店，在有樂町站旁的銀座インズ 2 一樓，11:00–20:00。從伊東屋步行約 6 分鐘。", art:"walkshoes", spot:true},
     {t:"下午", title:"noix de beurre 銀座三越店", note:"銀座三越 B2F 的費南雪專賣店，10:00–20:00。從伊東屋步行約 5 分鐘。", art:"financier", spot:true},
     {t:"晚上", title:"銀座伊東屋本店", note:"全體一起。平日 10:00–20:00。", art:"stationery", spot:true, shop:"ginza"},
@@ -551,7 +586,7 @@ const DAYS = [
   {id:"d7", date:"19", wd:"六", title:"返程", sub:"成田第 2 航廈 → 台中", art:"d_home", seal:"", stay:"", stayArt:"", stayNote:"",
    items:[
     {t:"09:30", title:"飯店 check-out", note:"", m:"bag"},
-    {t:"09:30", alt:true, title:"飯店 → 機場", opts:[
+    {t:"09:30", alt:true, title:"飯店 → 機場", led:{d:"京成 Access，或機場接送專車"}, opts:[
       {tag:"A", m:"train", title:"京成 Access 特急 → 成田第 2 航廈", note:"10:15 左右從東銀座搭車（飯店步行約 10 分鐘），到成田第 2 航廈約 1.5 小時。", q:"東銀座駅", ql:"東銀座站"},
       {tag:"B", m:"car", title:"機場接送（專車）飯店直達成田第 2 航廈", note:"Google 地圖模擬 12/19（六）09:30 出發：車程約 50 分–1 小時 15 分，約 10:45 前後抵達。請提前預約。", dir:"https://www.google.com/maps/dir/35.6639906,139.7716542/%E6%88%90%E7%94%B0%E5%9B%BD%E9%9A%9B%E7%A9%BA%E6%B8%AF+%E7%AC%AC2%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/data=!4m6!4m5!2m3!6e0!7e2!8j1797672600!3e0", ql:"飯店到機場的車程"}]},
     {t:"12:00", title:"抵達成田第 2 航廈、報到", note:"建議起飛前 2 小時到", m:"plane"},
@@ -618,6 +653,90 @@ const packHiddenIn = ci => { const h=packHidden(); return PACK[ci].items.filter(
 const packItems = ci => { const h=packHidden(); return PACK[ci].items.map((x,i)=>typeof x==="string" ? {k:ci+"-"+i, n:x} : {k:ci+"-"+i, n:x.n, d:x.d}).filter(it=>!h[it.k]).concat((packCustom()[ci]||[]).map(c=>({k:ci+"-c"+c.id, n:c.n, custom:c.id}))); };
 const packTotal = () => PACK.reduce((s,_,ci)=>s+packItems(ci).length,0);
 const packDone = () => { const st=store.get("pack",{}); return PACK.reduce((s,_,ci)=>s+packItems(ci).filter(it=>st[it.k]).length,0); };
+
+/* ---------- ledger (記帳；只存在這台裝置) ----------
+   記帳項目大多「由行程自動產生」，行程改了記帳頁就跟著改：
+   - 機票：DAYS 裡 m:"plane" 且標題以航班號（如 JX314）開頭的項目，id "fly:航班號"
+   - 住宿：DAYS 的 stay，連續同一家合併成一筆，id "stay:飯店名:第一晚日期"
+   - 每天：DAYS 的行程項目，id "日id:標題"。預設會記帳的：交通（m 為 train/bus/taxi/bike/car，接駁車 sh 除外）、
+     吃飯（m:"bowl"）、交通二選一、行程確認地點（spot）、選配（opt）、有順路購物（shop）的項目。
+     個別項目可加 led：false 不記帳；true 要記帳；"名稱" 改記帳名稱；{n, d, c, a, all} 改名稱/說明/幣別/預設金額，all:true 不標組別。
+   - LED_PRE（行前固定項目）、LED_ETC（其他）是手寫的，id 不能改。
+   改行程標題會讓 id 改變：使用者已填金額的舊項目不會消失，會移到「行程已變更的項目」，由使用者決定刪除或保留。 */
+const LED_M = ["train","bus","taxi","bike","car","bowl"];
+const LED_PRE = [
+  {id:"ins", n:"旅平險", c:"TWD"},
+  {id:"esim", n:"eSIM", c:"TWD"},
+  {id:"twride", n:"台灣端機場接送", d:"大邱、錦祥街分開搭車", c:"TWD"},
+  {id:"jttp", n:"JTTP 收入印紙", d:"每份 4,000 日圓、只能付現金；不只一份請改金額", a:4000, g:"A"}];
+const LED_ETC = [
+  {id:"suica", n:"交通卡（Suica）儲值", d:"地鐵、JR、巴士都能用"},
+  {id:"airport", n:"機場餐飲、免稅店"}];
+const dayParts = d => [[d.pre,null], [d.groups&&d.groups.A.items,"A"], [d.groups&&d.groups.B.items,"B"], [d.items,null], [d.post,null]].filter(p=>p[0]);
+function ledFromItem(d, it, g){
+  const o = it.led;
+  if(o===false) return null;
+  if(!o && !((LED_M.includes(it.m) && !it.sh) || it.alt || it.spot || it.opt || it.shop)) return null;
+  const x = (o && typeof o==="object") ? o : {};
+  return {id:`${d.id}:${it.title}`, n: typeof o==="string" ? o : (x.n || it.title),
+    d: [it.t && /\d/.test(it.t) ? it.t : "", x.d || (it.opt && !x.d ? it.opt : "")].filter(Boolean).join("・"),
+    c: x.c, a: x.a, g: x.all ? null : g};
+}
+function ledFlights(){
+  const out=[];
+  DAYS.forEach(d=>dayParts(d).forEach(([arr])=>arr.forEach(it=>{ const m = it.m==="plane" && /^([A-Z]{2}\d{2,4})\s*(.*)$/.exec(it.title);
+    if(m) out.push({id:"fly:"+m[1], n:`${m[1]} 機票`, d:`12/${d.date} ${it.t} ${m[2]}`.trim(), c:"TWD"}); })));
+  return out;
+}
+function ledStays(){
+  const out=[]; let cur=null;
+  DAYS.forEach(d=>{ if(!d.stay){ cur=null; return; }
+    if(cur && cur.stay===d.stay){ cur.last=d.date; cur.nights++; return; }
+    cur={stay:d.stay, first:d.date, last:d.date, nights:1}; out.push(cur); });
+  return out.map(x=>({id:`stay:${x.stay}:${x.first}`, n:x.stay, d:`12/${x.first}${x.nights>1?"–12/"+x.last:""}・${x.nights} 晚`, c:"TWD"}));
+}
+function ledDay(d){
+  const out=[], seen={};
+  dayParts(d).forEach(([arr,g])=>arr.forEach(it=>{ const x=ledFromItem(d,it,g); if(!x) return;
+    if(seen[x.id]) x.id += "#" + (++seen[x.id]); else seen[x.id]=1; out.push(x); }));
+  return out;
+}
+const LEDGER = [
+  {id:"pre", name:"機票・住宿・行前", items:[...ledFlights(), ...ledStays(), ...LED_PRE]},
+  ...DAYS.map(d=>({id:d.id, day:d.id, items:ledDay(d)})),
+  {id:"etc", name:"其他・整趟", items:LED_ETC},
+  {id:"gone", name:"行程已變更的項目", gone:true, items:[]}
+];
+const LED_CUR = {JPY:{lb:"日圓", sym:"¥"}, TWD:{lb:"台幣", sym:"NT$"}};
+const ledState = () => store.get("ledger", {});
+const ledHidden = () => store.get("ledgerHidden", {});
+const ledCustom = () => store.get("ledgerCustom", {});
+const ledSecName = s => { if(!s.day) return s.name; const d=DAYS.find(x=>x.id===s.day); return `12/${d.date}（${d.wd}）${d.title}`; };
+const ledHiddenIn = si => { const h=ledHidden(); return LEDGER[si].items.filter(it=>h[it.id]).length; };
+let LED_KNOWN = null;
+function ledOrphans(){
+  if(!LED_KNOWN){ LED_KNOWN = new Set(LEDGER.flatMap(s=>s.items.map(it=>it.id))); }
+  const st=ledState(), cust=new Set(Object.values(ledCustom()).flat().map(c=>"c"+c.id));
+  return Object.keys(st).filter(id=>!LED_KNOWN.has(id) && !cust.has(id) && st[id] && st[id].a!=null)
+    .map(id=>({id, n:st[id].n || "（已移除的項目）", d:"行程已拿掉或改名", amt:st[id].a, cur:st[id].c||"JPY", gone:true, sec:"gone"}));
+}
+function ledItems(si){
+  const s=LEDGER[si], st=ledState(), h=ledHidden();
+  if(s.gone) return ledOrphans();
+  return s.items.filter(it=>!h[it.id]).map(it=>Object.assign({}, it))
+    .concat((ledCustom()[s.id]||[]).map(c=>({id:"c"+c.id, n:c.n, custom:c.id})))
+    .map(it=>{ const v=st[it.id]||{}; it.sec=s.id; it.amt = ("a" in v) ? v.a : (it.a ?? null); it.cur = v.c || it.c || "JPY"; return it; });
+}
+const ledSum = its => its.reduce((t,it)=>{ if(it.amt!=null){ t[it.cur]+=it.amt; t.n++; } return t; }, {JPY:0, TWD:0, n:0});
+const ledAll = () => LEDGER.flatMap((_,si)=>ledItems(si));
+const ledRate = () => { const r=store.get("ledgerRate", null); return (typeof r==="number" && r>0) ? r : null; };
+const fmtNum = n => n.toLocaleString("en-US", {maximumFractionDigits:2});
+const fmtAmt = (n, cur) => LED_CUR[cur].sym + fmtNum(n);
+function parseAmt(s, dp=2){
+  s = String(s).replace(/[０-９．，]/g, c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[,\s¥￥円元$]|NT/g, "");
+  if(s==="") return null;
+  const n = Number(s); return (isFinite(n) && n>=0) ? Math.round(n*10**dp)/10**dp : NaN;
+}
 
 /* ---------- state ---------- */
 let curDay = store.get("day","d1"); if(!DAYS.some(d=>d.id===curDay)) curDay="d1";
@@ -811,7 +930,8 @@ function renderHome(){
     <section class="sec"><div class="sec-title"><h2>清單</h2></div><div class="quick">
       ${q("spots","pin","行程確認清單","地圖清單 "+LIVE.length+" 個地點",spotsDone(),LIVE.length)}
       ${q("prep","clip","待議及待辦",TODO[0].items.length+" 項待議、"+TODO[1].items.length+" 項待辦",todoDone(),TODO_TOTAL)}
-      ${q("pack","bag","打包清單",PACK.length+" 大類",packDone(),packTotal())}</div></section>
+      ${q("pack","bag","打包清單",PACK.length+" 大類",packDone(),packTotal())}
+      ${(()=>{ const a=ledAll(), t=ledSum(a); return q("ledger","wallet","記帳",`日圓 ${fmtAmt(t.JPY,"JPY")}・台幣 ${fmtAmt(t.TWD,"TWD")}`,t.n,a.length); })()}</div></section>
     <section class="sec"><div class="sec-title"><h2>住宿</h2></div><div class="stays">
       ${stay("ginza","TOSEI酒店 可可尼築地銀座","12/13、12/15–12/18・共 5 晚","近東銀座站，Access 特急直達成田")}
       ${stay("firepit","輕井澤英迪格酒店","12/14・1 晚","check-in 15:00・check-out 11:00")}</div></section>
@@ -1081,17 +1201,175 @@ function renderPack(){
     <button class="reset" type="button" data-reset="pack">清除勾選</button><p class="foot">勾選、刪除和自己新增的項目只存在這台裝置的瀏覽器裡，不會同步給其他人，也不會影響別人的清單。</p>`;
 }
 
+/* ---------- ledger view ---------- */
+let ledOpen = store.get("ledgerOpen", {0:true});
+const ledDom = id => { let h=2166136261; for(const ch of String(id)){ h^=ch.codePointAt(0); h=Math.imul(h,16777619)>>>0; } return "led-"+h.toString(36); };
+function ledRowHTML(it){
+  const g = it.g ? tagH(GNAME[it.g], it.g==="A"?"a":"b")+" " : "";
+  const v = it.amt==null ? "" : fmtNum(it.amt);
+  return `<div class="led-row">
+    <div class="led-nm"><span class="led-t">${g}${esc(it.n)}</span>${it.d?`<small>${esc(it.d)}</small>`:""}</div>
+    <div class="led-amt">
+      <input type="text" class="led-in" id="${ledDom(it.id)}" data-lid="${esc(it.id)}" value="${v}" placeholder="金額" inputmode="decimal" autocomplete="off" enterkeyhint="done" aria-label="「${esc(it.n)}」的金額">
+      <select class="led-cur" data-lid="${esc(it.id)}" aria-label="「${esc(it.n)}」的幣別">${Object.keys(LED_CUR).map(c=>`<option value="${c}"${it.cur===c?" selected":""}>${LED_CUR[c].lb}</option>`).join("")}</select>
+      <button type="button" class="ck-del" data-delled="${it.gone?"o":it.custom?"c":"p"}" data-sec="${it.sec}" data-lid="${esc(it.id)}" aria-label="刪除「${esc(it.n)}」">${ico("x")}</button>
+    </div></div>`;
+}
+const ledSubText = t => (t.JPY||t.TWD) ? `小計 ${[t.JPY?fmtAmt(t.JPY,"JPY"):"", t.TWD?fmtAmt(t.TWD,"TWD"):""].filter(Boolean).join("・")}` : "小計 —";
+function renderLedger(){
+  const all = ledAll(), tot = ledSum(all), rate = ledRate();
+  document.getElementById("view-ledger").innerHTML = listHero("ledger","記帳",`依行程、機票和住宿自動列出 ${LEDGER.reduce((n,s)=>n+s.items.length,0)} 個花費項目，行程有變動時會跟著更新；填上金額就會自動加總。用不到的可以按 ✕ 刪除，也可以在每一類最下面新增。`,tot.n,all.length)
+    + `<div class="card led-sum">
+      <div class="led-tots"><div><span>日圓合計</span><b id="led-jpy">${fmtAmt(tot.JPY,"JPY")}</b></div><div><span>台幣合計</span><b id="led-twd">${fmtAmt(tot.TWD,"TWD")}</b></div></div>
+      <div class="led-rate"><label for="led-rate">匯率：1 日圓 ＝</label><input type="text" id="led-rate" inputmode="decimal" autocomplete="off" placeholder="查當天匯率" value="${rate??""}" aria-describedby="led-all"><span>台幣</span></div>
+      <p class="led-all" id="led-all" role="status">${ledAllText(tot, rate)}</p>
+      <div class="led-exp"><button type="button" class="btn" data-ledexp="xlsx">${ico("dl")}匯出 Excel</button><button type="button" class="btn" data-ledexp="pdf">${ico("dl")}匯出 PDF</button></div>
+      <p class="foot">Excel 會直接下載成 .xlsx 檔。PDF 會打開列印畫面，目的地請選「儲存為 PDF」。</p></div>
+    <div class="cats-tools"><span>點分類展開或收起</span><button type="button" class="btn" data-ledall="1">${LEDGER.some((_,si)=>ledOpen[si])?"全部收起":"全部展開"}</button></div>
+    <div class="cats">${LEDGER.map((s,si)=>{ const its=ledItems(si), t=ledSum(its), hid=ledHiddenIn(si);
+        if(s.gone){ if(!its.length) return "";
+          return catHTML("led", si, s.name, t.n, its.length, true, `<p class="cat-hint">這些項目已經從行程拿掉或改了名稱，但你填過金額，所以先留在這裡、也算進合計。不需要的話按 ✕ 刪除。</p>
+            <p class="led-sub" id="led-sub-${s.id}">${ledSubText(t)}</p><div class="led-list">${its.map(ledRowHTML).join("")}</div>`); }
+        const body = `<p class="led-sub" id="led-sub-${s.id}">${ledSubText(t)}</p>
+          <div class="led-list">${its.map(ledRowHTML).join("")||`<p class="foot">這一類目前沒有項目。</p>`}</div>
+          ${hid?`<p class="restore-row"><button type="button" class="btn" data-ledrestore="${si}">還原這一類刪掉的 ${hid} 個預設項目</button></p>`:""}
+          <form class="add-item" data-ledadd="${si}"><label class="sr" for="ledadd-${si}">新增到「${esc(ledSecName(s))}」</label>
+            <input type="text" id="ledadd-${si}" maxlength="40" placeholder="例如：藥妝店" autocomplete="off" enterkeyhint="done" aria-describedby="ledmsg-${si}"><button type="submit" class="btn">＋ 新增</button></form>
+          <p class="add-msg" id="ledmsg-${si}" role="status"></p>`;
+        return catHTML("led", si, ledSecName(s), t.n, its.length, !!ledOpen[si], body); }).join("")}</div>
+    <button class="reset" type="button" data-ledreset="1">清除所有金額</button>
+    <p class="foot">金額、刪除和自己新增的項目只存在這台裝置的瀏覽器裡，不會同步給其他人。換手機或清除瀏覽器資料就會不見，記得不時匯出 Excel 備份。</p>`;
+}
+function ledAllText(t, rate){
+  if(!rate) return "填入匯率後，會把日圓換算成台幣，算出全部合計。";
+  return `全部合計約 ${fmtAmt(Math.round(t.TWD + t.JPY*rate),"TWD")}（日圓 × ${rate} ＋ 台幣）`;
+}
+function ledRefresh(){
+  const all = ledAll(), tot = ledSum(all), $ = id => document.getElementById(id);
+  if(!$("led-jpy")) return;
+  $("led-jpy").textContent = fmtAmt(tot.JPY,"JPY"); $("led-twd").textContent = fmtAmt(tot.TWD,"TWD"); $("led-all").textContent = ledAllText(tot, ledRate());
+  const bar = document.querySelector("#view-ledger .lhero .bar");
+  if(bar){ bar.setAttribute("aria-valuenow", tot.n); bar.setAttribute("aria-valuemax", all.length); bar.firstElementChild.style.width = (all.length?tot.n/all.length*100:0)+"%"; bar.nextElementSibling.textContent = `${tot.n} / ${all.length}`; }
+  LEDGER.forEach((s,si)=>{ const its=ledItems(si), t=ledSum(its), sub=$("led-sub-"+s.id), hd=document.querySelector(`[data-ledcat="${si}"]`);
+    if(sub) sub.textContent = ledSubText(t);
+    if(hd){ hd.querySelector(".c").textContent = `${t.n} / ${its.length}`; hd.querySelector(".mini i").style.width = (its.length?t.n/its.length*100:0)+"%"; } });
+}
+function ledSet(id, patch){ const st=ledState(), it=ledAll().find(x=>x.id===id); st[id]=Object.assign({}, st[id], it&&!it.gone?{n:it.n}:{}, patch); store.set("ledger", st); }
+
+/* ----- export: .xlsx（瀏覽器端組 zip，不靠外部程式庫）與列印成 PDF ----- */
+const xmlEsc = s => String(s).replace(/[<>&"]/g, c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
+let CRC_T = null;
+function crc32(b){ if(!CRC_T){ CRC_T=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c = c&1 ? 0xEDB88320^(c>>>1) : c>>>1; CRC_T[n]=c>>>0; } }
+  let c=0xFFFFFFFF; for(let i=0;i<b.length;i++) c = CRC_T[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }
+function zipStore(files){
+  const enc=new TextEncoder(), parts=[], cen=[]; let off=0;
+  const now=new Date(), dt=((now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()>>1)), dd=(((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate());
+  for(const f of files){
+    const name=enc.encode(f.name), data=typeof f.data==="string"?enc.encode(f.data):f.data, crc=crc32(data);
+    const h=new DataView(new ArrayBuffer(30)); h.setUint32(0,0x04034b50,true); h.setUint16(4,20,true); h.setUint16(6,0x0800,true); h.setUint16(8,0,true);
+    h.setUint16(10,dt,true); h.setUint16(12,dd,true); h.setUint32(14,crc,true); h.setUint32(18,data.length,true); h.setUint32(22,data.length,true); h.setUint16(26,name.length,true); h.setUint16(28,0,true);
+    parts.push(new Uint8Array(h.buffer), name, data);
+    const c=new DataView(new ArrayBuffer(46)); c.setUint32(0,0x02014b50,true); c.setUint16(4,20,true); c.setUint16(6,20,true); c.setUint16(8,0x0800,true); c.setUint16(10,0,true);
+    c.setUint16(12,dt,true); c.setUint16(14,dd,true); c.setUint32(16,crc,true); c.setUint32(20,data.length,true); c.setUint32(24,data.length,true); c.setUint16(28,name.length,true);
+    c.setUint32(42,off,true); cen.push(new Uint8Array(c.buffer), name);
+    off += 30 + name.length + data.length;
+  }
+  const csize = cen.reduce((n,p)=>n+p.length,0), e=new DataView(new ArrayBuffer(22));
+  e.setUint32(0,0x06054b50,true); e.setUint16(8,files.length,true); e.setUint16(10,files.length,true); e.setUint32(12,csize,true); e.setUint32(16,off,true);
+  return new Blob([...parts, ...cen, new Uint8Array(e.buffer)], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+const ledStamp = () => { const d=new Date(), p=n=>String(n).padStart(2,"0"); return {file:`${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}`, text:`${d.getFullYear()}/${p(d.getMonth()+1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`}; };
+function ledXlsx(){
+  const rows=[], col=i=>String.fromCharCode(65+i), stamp=ledStamp(), rate=ledRate();
+  // cell: string | {v:number, s} | {f, v, s} | {t:string, s}
+  const S = (t,s) => ({t, s}), N = (v,s) => ({v, s:s??2});
+  rows.push([S("2026 東京冬令營 記帳",4)]);
+  rows.push([S("匯出時間："+stamp.text)]);
+  rows.push([]);
+  rows.push(["日期／分類","組別","項目","說明","金額","幣別"].map(t=>S(t,1)));
+  const first = rows.length+1;
+  LEDGER.forEach((s,si)=>ledItems(si).forEach(it=>rows.push([ledSecName(s), it.g?GNAME[it.g]:"", it.n, it.d||"", it.amt==null?"":N(it.amt), LED_CUR[it.cur].lb])));
+  const last = Math.max(rows.length, first), tot = ledSum(ledAll());
+  rows.push([]);
+  const rJ = rows.length+1; rows.push(["","",S("日圓合計",6),"",{f:`SUMIF(F${first}:F${last},"日圓",E${first}:E${last})`, v:tot.JPY, s:3},"日圓"]);
+  const rT = rows.length+1; rows.push(["","",S("台幣合計",6),"",{f:`SUMIF(F${first}:F${last},"台幣",E${first}:E${last})`, v:tot.TWD, s:3},"台幣"]);
+  const rR = rows.length+1; rows.push(["","",S("匯率（1 日圓 ＝ ? 台幣）",6),"",rate==null?"":N(rate,5),""]);
+  rows.push(["","",S("全部合計（換算台幣）",6),"",{f:`IF(E${rR}="","",E${rT}+E${rJ}*E${rR})`, v:rate==null?"":Math.round((tot.TWD+tot.JPY*rate)*100)/100, s:3},"台幣"]);
+  const cell = (c, ref) => {
+    if(c===""||c==null) return "";
+    if(typeof c==="string") return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${xmlEsc(c)}</t></is></c>`;
+    if(c.f) return c.v===""
+      ? `<c r="${ref}" s="${c.s}" t="str"><f>${xmlEsc(c.f)}</f><v></v></c>`
+      : `<c r="${ref}" s="${c.s}"><f>${xmlEsc(c.f)}</f><v>${c.v}</v></c>`;
+    if("t" in c) return `<c r="${ref}" t="inlineStr"${c.s?` s="${c.s}"`:""}><is><t xml:space="preserve">${xmlEsc(c.t)}</t></is></c>`;
+    return `<c r="${ref}" s="${c.s}"><v>${c.v}</v></c>`;
+  };
+  const sheet = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheetViews><sheetView workbookViewId="0"><pane ySplit="4" topLeftCell="A5" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
+<cols><col min="1" max="1" width="24" customWidth="1"/><col min="2" max="2" width="9" customWidth="1"/><col min="3" max="3" width="34" customWidth="1"/><col min="4" max="4" width="46" customWidth="1"/><col min="5" max="5" width="14" customWidth="1"/><col min="6" max="6" width="8" customWidth="1"/></cols>
+<sheetData>${rows.map((r,i)=>`<row r="${i+1}">${r.map((c,j)=>cell(c, col(j)+(i+1))).join("")}</row>`).join("")}</sheetData>
+<autoFilter ref="A4:F${last}"/>
+<pageSetup orientation="portrait" paperSize="9" fitToWidth="1" fitToHeight="0"/>
+</worksheet>`;
+  const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<numFmts count="1"><numFmt numFmtId="164" formatCode="0.0000"/></numFmts>
+<fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="14"/><name val="Calibri"/></font></fonts>
+<fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFF1E6D2"/><bgColor indexed="64"/></patternFill></fill></fills>
+<borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="7"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/><xf numFmtId="3" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="3" fontId="1" fillId="0" borderId="0" xfId="0" applyNumberFormat="1" applyFont="1"/><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="0" fontId="1" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+</styleSheet>`;
+  const blob = zipStore([
+    {name:"[Content_Types].xml", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`},
+    {name:"_rels/.rels", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`},
+    {name:"xl/workbook.xml", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="記帳" sheetId="1" r:id="rId1"/></sheets><definedNames><definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">'記帳'!$A$4:$F$${last}</definedName></definedNames><calcPr calcId="191029" fullCalcOnLoad="1"/></workbook>`},
+    {name:"xl/_rels/workbook.xml.rels", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+    {name:"xl/worksheets/sheet1.xml", data:sheet},
+    {name:"xl/styles.xml", data:styles}
+  ]);
+  saveBlob(blob, `2026東京冬令營_記帳_${stamp.file}.xlsx`);
+}
+function saveBlob(blob, name){
+  const u=URL.createObjectURL(blob), a=document.createElement("a"); a.href=u; a.download=name; a.rel="noopener";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u), 10000);
+}
+function ledPrintHTML(){
+  const all=ledAll(), tot=ledSum(all), rate=ledRate(), stamp=ledStamp();
+  const body = LEDGER.map((s,si)=>{ const its=ledItems(si); if(!its.length) return "";
+    return `<tr class="lsec"><td colspan="2">${esc(ledSecName(s))}</td><td colspan="2" class="n">${esc(ledSubText(ledSum(its)).replace(/^小計 /,""))}</td></tr>`
+      + its.map(it=>`<tr><td>${it.g?esc(GNAME[it.g])+"・":""}${esc(it.n)}</td><td class="d">${esc(it.d||"")}</td><td>${LED_CUR[it.cur].lb}</td><td class="n">${it.amt==null?"":fmtNum(it.amt)}</td></tr>`).join(""); }).join("");
+  return `<h1>2026 東京冬令營 記帳</h1><p class="meta">匯出時間：${stamp.text}</p>
+    <table class="main"><colgroup><col style="width:34%"><col><col style="width:9%"><col style="width:17%"></colgroup><thead><tr><th>項目</th><th>說明</th><th>幣別</th><th class="n">金額</th></tr></thead><tbody>${body}</tbody></table>
+    <table class="tot"><tr><th>日圓合計</th><td class="n">${fmtAmt(tot.JPY,"JPY")}</td></tr><tr><th>台幣合計</th><td class="n">${fmtAmt(tot.TWD,"TWD")}</td></tr>
+    ${rate?`<tr><th>匯率</th><td class="n">1 日圓 ＝ ${rate} 台幣</td></tr><tr><th>全部合計（換算台幣）</th><td class="n">${fmtAmt(Math.round(tot.TWD+tot.JPY*rate),"TWD")}</td></tr>`:""}</table>`;
+}
+function ledPrint(){
+  let el=document.getElementById("ledprint"); if(!el){ el=document.createElement("div"); el.id="ledprint"; el.setAttribute("aria-hidden","true"); document.body.appendChild(el); }
+  el.innerHTML = ledPrintHTML(); document.body.classList.add("printing");
+  const t=document.title; document.title=`2026東京冬令營_記帳_${ledStamp().file}`;
+  const done=()=>{ document.body.classList.remove("printing"); document.title=t; window.removeEventListener("afterprint",done); };
+  window.addEventListener("afterprint",done);
+  try{ window.print(); }catch(e){ done(); }
+}
+
 /* ---------- nav & routing ---------- */
-const NAV = [["home","home","首頁"],["trip","cal","行程"],["spots","pin","行程確認"],["prep","clip","待議待辦"],["pack","bag","打包"]];
+const NAV = [["home","home","首頁"],["trip","cal","行程"],["spots","pin","行程確認"],["prep","clip","待議待辦"],["pack","bag","打包"],["ledger","wallet","記帳"]];
 document.getElementById("nav").innerHTML = NAV.map(n=>`<a href="#${n[0]}" data-v="${n[0]}">${ico(n[1])}<span>${n[2]}</span></a>`).join("");
-const RENDER = {home:renderHome, trip:renderTrip, spots:renderSpots, prep:renderPrep, pack:renderPack};
+const RENDER = {home:renderHome, trip:renderTrip, spots:renderSpots, prep:renderPrep, pack:renderPack, ledger:renderLedger};
 let ROUTED = false;
 function route(){
   let v = (location.hash||"").replace("#",""); if(!RENDER[v]) v="home";
   Object.keys(RENDER).forEach(n=>{ const el=document.getElementById("view-"+n); el.classList.toggle("active", n===v); if(n!==v) el.innerHTML=""; });
   document.querySelectorAll(".nav a").forEach(a=>{ if(a.dataset.v===v) a.setAttribute("aria-current","page"); else a.removeAttribute("aria-current"); });
   RENDER[v](); window.scrollTo(0,0);
-  const NAMES={home:"首頁",trip:"行程",spots:"行程確認清單",prep:"待議及待辦",pack:"打包清單"};
+  const NAMES={home:"首頁",trip:"行程",spots:"行程確認清單",prep:"待議及待辦",pack:"打包清單",ledger:"記帳"};
   document.title = v==="home" ? "2026 東京冬令營" : NAMES[v]+" · 2026 東京冬令營";
   if(ROUTED){ const h=document.querySelector("#view-"+v+" h1"); if(h){ h.setAttribute("tabindex","-1"); h.focus({preventScroll:true}); } }
   ROUTED = true;
@@ -1112,10 +1390,34 @@ document.addEventListener("click", e=>{
   const tc=e.target.closest("[data-todocat]");
   if(tc){ const ci=+tc.dataset.todocat, sec=tc.closest(".cat"), open=sec.dataset.open!=="true";
     sec.dataset.open=open; tc.setAttribute("aria-expanded",open); todoOpen[ci]=open; store.set("todoOpen",todoOpen); return; }
-  const dc=e.target.closest("[data-delcustom],[data-delpack]");
+  const dc=e.target.closest("[data-delcustom],[data-delpack],[data-delled]");
   if(dc && dc.dataset.confirm!=="1"){ const nm=dc.getAttribute("aria-label").replace(/^刪除/,"");
     dc.dataset.confirm="1"; dc.classList.add("confirm"); dc.setAttribute("aria-label","再按一次確認刪除"+nm); dc.innerHTML=ico("x")+"<span>再按一次刪除</span>";
     clearTimeout(dc._t); dc._t=setTimeout(()=>{ dc.dataset.confirm=""; dc.classList.remove("confirm"); dc.setAttribute("aria-label","刪除"+nm); dc.innerHTML=ico("x"); },4000); return; }
+  if(dc && dc.dataset.delled){ const kind=dc.dataset.delled, sec=dc.dataset.sec, id=dc.dataset.lid, si=LEDGER.findIndex(s=>s.id===sec);
+    if(kind==="o"){ /* 只刪金額紀錄 */ }
+    else if(kind==="c"){ const lc=ledCustom(); lc[sec]=(lc[sec]||[]).filter(c=>"c"+c.id!==id); store.set("ledgerCustom",lc); }
+    else { const h=ledHidden(); h[id]=true; store.set("ledgerHidden",h); }
+    const st=ledState(); delete st[id]; store.set("ledger",st); renderLedger();
+    const f=document.getElementById("ledadd-"+si) || document.querySelector("[data-ledexp]"); if(f) f.focus(); return; }
+  const lr=e.target.closest("[data-ledrestore]");
+  if(lr){ const si=+lr.dataset.ledrestore, h=ledHidden(); LEDGER[si].items.forEach(it=>delete h[it.id]); store.set("ledgerHidden",h); renderLedger();
+    const f=document.getElementById("ledadd-"+si); if(f) f.focus(); return; }
+  const lc=e.target.closest("[data-ledcat]");
+  if(lc){ const si=+lc.dataset.ledcat, sec=lc.closest(".cat"), open=sec.dataset.open!=="true";
+    sec.dataset.open=open; lc.setAttribute("aria-expanded",open); ledOpen[si]=open; store.set("ledgerOpen",ledOpen);
+    const all=document.querySelector("[data-ledall]"); if(all) all.textContent = LEDGER.some((_,i)=>ledOpen[i])?"全部收起":"全部展開"; return; }
+  const la=e.target.closest("[data-ledall]");
+  if(la){ const open = !LEDGER.some((_,i)=>ledOpen[i]); LEDGER.forEach((_,i)=>ledOpen[i]=open); store.set("ledgerOpen",ledOpen);
+    document.querySelectorAll("#view-ledger .cat").forEach(sec=>{ sec.dataset.open=open; sec.querySelector(".cat-hd").setAttribute("aria-expanded",open); });
+    la.textContent = open?"全部收起":"全部展開"; return; }
+  const lx=e.target.closest("[data-ledexp]");
+  if(lx){ if(lx.dataset.ledexp==="xlsx") ledXlsx(); else ledPrint(); return; }
+  const lz=e.target.closest("[data-ledreset]");
+  if(lz){ const n=ledSum(ledAll()).n; if(!n) return;
+    if(lz.dataset.confirm!=="1"){ lz.dataset.confirm="1"; lz.classList.add("danger"); lz.textContent=`再按一次，清除全部 ${n} 筆金額`;
+      clearTimeout(lz._t); lz._t=setTimeout(()=>{ lz.dataset.confirm=""; lz.classList.remove("danger"); lz.textContent="清除所有金額"; },5000); return; }
+    store.set("ledger",{}); renderLedger(); return; }
   if(dc && dc.dataset.delpack){ const k=dc.dataset.delpack, ci=k.split("-")[0]; const h=packHidden(); h[k]=true; store.set("packHidden",h);
     const st=store.get("pack",{}); delete st[k]; store.set("pack",st); renderPack();
     const f=document.getElementById("add-"+ci); if(f) f.focus(); return; }
@@ -1160,6 +1462,14 @@ document.addEventListener("click", e=>{
     store.set(k,{}); ({todo:renderPrep}[k]||RENDER[k])(); }
 });
 document.addEventListener("submit", e=>{
+  const lf=e.target.closest("form[data-ledadd]");
+  if(lf){ e.preventDefault(); const inp=lf.querySelector("input"), n=inp.value.trim(), si=+lf.dataset.ledadd, msg=document.getElementById("ledmsg-"+si);
+    const warn = t => { msg.textContent=t; inp.setAttribute("aria-invalid","true"); inp.focus(); };
+    if(!n){ warn("請先輸入項目名稱，再按新增。"); return; }
+    if(ledItems(si).some(it=>it.n.trim().toLowerCase()===n.toLowerCase())){ warn(`「${n}」已經在這一類裡了，直接填它的金額就可以。`); inp.select(); return; }
+    const id=Date.now().toString(36), sec=LEDGER[si].id, lc=ledCustom(); (lc[sec]=lc[sec]||[]).push({id, n}); store.set("ledgerCustom",lc);
+    ledOpen[si]=true; store.set("ledgerOpen",ledOpen); renderLedger();
+    const a=document.getElementById(ledDom("c"+id)); if(a) a.focus(); return; }
   const f=e.target.closest("form[data-addcat]"); if(!f) return; e.preventDefault();
   const inp=f.querySelector("input"), n=inp.value.trim(), ci=f.dataset.addcat, msg=document.getElementById("addmsg-"+ci);
   const warn = t => { msg.textContent=t; inp.setAttribute("aria-invalid","true"); inp.focus(); };
@@ -1170,11 +1480,22 @@ document.addEventListener("submit", e=>{
   const again=document.getElementById("add-"+ci); if(again) again.focus();
 });
 document.addEventListener("input", e=>{
-  const inp=e.target.closest("form[data-addcat] input"); if(!inp || !inp.hasAttribute("aria-invalid")) return;
+  const li=e.target.closest(".led-in");
+  if(li){ const v=parseAmt(li.value); if(Number.isNaN(v)){ li.setAttribute("aria-invalid","true"); return; }
+    li.removeAttribute("aria-invalid"); ledSet(li.dataset.lid, {a:v}); ledRefresh(); return; }
+  if(e.target.id==="led-rate"){ const v=parseAmt(e.target.value, 6);
+    if(Number.isNaN(v) || v===0){ if(v===0||e.target.value.trim()) e.target.setAttribute("aria-invalid","true"); return; }
+    e.target.removeAttribute("aria-invalid"); store.set("ledgerRate", v); ledRefresh(); return; }
+  const inp=e.target.closest("form[data-addcat] input, form[data-ledadd] input"); if(!inp || !inp.hasAttribute("aria-invalid")) return;
   inp.removeAttribute("aria-invalid"); const m=document.getElementById(inp.getAttribute("aria-describedby")); if(m) m.textContent="";
 });
 document.addEventListener("keydown", e=>{ if(e.key==="Escape" && document.getElementById("modal").dataset.open==="true") closeModal(); });
+document.addEventListener("focusout", e=>{
+  const li=e.target.closest(".led-in"); if(!li) return; const v=parseAmt(li.value);
+  if(v!=null && !Number.isNaN(v)) li.value=fmtNum(v);
+});
 document.addEventListener("change", e=>{
+  const lc=e.target.closest(".led-cur"); if(lc){ ledSet(lc.dataset.lid, {c:lc.value}); ledRefresh(); return; }
   const up=e.target.closest("input[data-up]");
   if(up){ const files=[...up.files]; if(files.length) addPhotos(+up.dataset.up, files); return; }
   const cb=e.target.closest("input[data-key]"); if(!cb) return;

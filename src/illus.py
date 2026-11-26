@@ -616,3 +616,29 @@ def dinnerwalk():
         "夜晚銀座街頭散步，走向掛著燈籠的小餐館")
 
 ALL.update({"dinnerwalk": dinnerwalk})
+
+def ledger():
+    coin = lambda x, y, r: (f'<circle class="f-yellow" cx="{x}" cy="{y}" r="{r}"></circle><circle class="sh" cx="{x+r*0.25}" cy="{y+r*0.2}" r="{r*0.8}" opacity="0.08"></circle>'
+                            f'<circle class="ol thin" cx="{x}" cy="{y}" r="{r}"></circle><circle class="ol xthin" cx="{x}" cy="{y}" r="{r*0.7}"></circle>'
+                            f'<path class="ol thin" d="M{x-r*0.32} {y-r*0.42} L{x} {y} L{x+r*0.32} {y-r*0.42} M{x} {y} V{y+r*0.45} M{x-r*0.32} {y+r*0.05} H{x+r*0.32} M{x-r*0.32} {y+r*0.25} H{x+r*0.32}"></path>')
+    lines = ''.join(f'<path class="ol xthin" d="M{x0} {y} H{x0+44}"></path><path class="ol xthin" d="M{x0+52} {y} H{x0+68}"></path>'
+                    for x0 in (86, 166) for y in (74, 90, 106, 122))
+    return svg('<rect class="f-cloud" x="-10" y="-10" width="340" height="220"></rect>'
+        + '<rect class="f-wood" x="-10" y="148" width="340" height="62"></rect><path class="ol thin" d="M-10 148 H330"></path>'
+        + '<path class="sh" d="M80 150 L246 150 L250 158 L76 158Z"></path>'
+        + '<path class="f-snow" d="M78 54 Q118 46 160 56 Q202 46 242 54 V146 Q202 138 160 148 Q118 138 78 146Z"></path>'
+        + '<path class="f-sky2" d="M160 56 Q202 46 242 54 V146 Q202 138 160 148Z" opacity="0.6"></path>'
+        + lines
+        + '<path class="ol" d="M78 54 Q118 46 160 56 Q202 46 242 54 V146 Q202 138 160 148 Q118 138 78 146Z M160 56 V148"></path>'
+        + '<path class="f-red" d="M196 44 H206 V64 L201 59 L196 64Z"></path><path class="ol thin" d="M196 44 H206 V64 L201 59 L196 64Z"></path>'
+        + '<g transform="rotate(-8 40 112)"><path class="f-snow" d="M22 64 H60 V150 L55 146 L50 150 L45 146 L40 150 L35 146 L30 150 L26 146 L22 150Z"></path>'
+        + '<path class="ol thin" d="M22 64 H60 V150 L55 146 L50 150 L45 146 L40 150 L35 146 L30 150 L26 146 L22 150Z"></path>'
+        + '<path class="ol xthin" d="M28 76 H54 M28 86 H46 M28 96 H54 M28 106 H42 M28 124 H54"></path><path class="ol thin" d="M28 134 H54"></path></g>'
+        + '<g transform="rotate(32 262 112)"><rect class="f-blue" x="256" y="62" width="11" height="78" rx="2"></rect><path class="f-cloud" d="M256 140 L261.5 156 L267 140Z"></path>'
+        + '<rect class="ol thin" x="256" y="62" width="11" height="78" rx="2"></rect><path class="ol thin" d="M256 140 L261.5 156 L267 140"></path><path class="hl" d="M259 70 V128"></path></g>'
+        + coin(272, 168, 15) + coin(298, 176, 11) + coin(246, 180, 10)
+        + '<path class="f-green" d="M100 164 H186 V186 H100Z"></path><path class="ol thin" d="M100 164 H186 V186 H100Z"></path><circle class="ol xthin" cx="143" cy="175" r="7"></circle>'
+        + '<path class="f-pink" d="M112 170 H204 V192 H112Z" opacity="0.95"></path><path class="ol thin" d="M112 170 H204 V192 H112Z"></path><circle class="ol xthin" cx="158" cy="181" r="7"></circle>',
+        "攤開的記帳本、收據、筆、紙鈔和日圓硬幣")
+
+ALL.update({"ledger": ledger})

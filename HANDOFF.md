@@ -31,7 +31,7 @@ https://stuart0401.github.io/2026Winter/
 ```
 index.html          ← 建置產物，GitHub Pages 讀這個。不要手改，改 src/ 再建置。
 src/build_site.py   ← 主程式：HTML/CSS/JS 樣板＋所有行程資料
-src/illus.py        ← 手繪風 SVG 插圖（每張是一個函式，登記在 ALL）
+src/illus.py        ← 手繪風 SVG 插圖（每張是一個函式，登記在 ALL；記帳頁用 ledger）
 src/gen.py          ← 顏色主題（LIGHT/DARK）、填色類別、圖示；它的 __main__ 是舊設計稿，用不到
 tests/check.py      ← 回歸檢查
 HANDOFF.md          ← 這份
@@ -64,10 +64,17 @@ python3 tests/check.py [檔案]          # 預設檢查 ./index.html，印出「
 - **PACK**：打包類別。**新類別只能加在最後面**（勾選用 `類別索引-項目索引` 存，插在中間會讓大家的勾選錯位）。項目可以是字串，或 `{n, d}`（d 是灰色小字說明）。
 - **NEAR**：住宿附近超商・超市；**SHOP**：順路購物清單（`{k, n, w, h, q}`）。兩者都用 `listHTML()` 畫成可收合清單。
 - **SHUTTLE**：英迪格接駁車時刻。
+- **記帳（LEDGER）由行程自動產生**，改行程時記帳頁會跟著變，通常不用另外改：
+  - 機票：DAYS 裡 `m:"plane"`、標題以航班號開頭的項目（id `fly:JX314`）；住宿：DAYS 的 `stay`，連續同一家合併（id `stay:飯店名:第一晚日期`）。
+  - 每天：DAYS 的行程項目（id `日id:標題`）。預設會記帳：交通（train/bus/taxi/bike/car，接駁車 `sh` 除外）、吃飯（bowl）、交通二選一、`spot`、`opt`、有 `shop` 的項目。
+  - 個別項目用 `led` 調整：`false` 不記帳（例如免費景點、已含在住宿的）、`true` 要記帳、`"名稱"` 改記帳名稱、`{n, d, c, a, all}` 改名稱／說明／幣別／預設金額，`all:true` 不標組別。新增行程時想一下要不要加 `led`。
+  - `LED_PRE`（旅平險、eSIM、台灣端接送、JTTP 收入印紙）和 `LED_ETC`（Suica、機場）是手寫的，id 不能改。
+  - **改行程標題＝記帳 id 改變。** 使用者已填金額的舊項目不會消失，會出現在「行程已變更的項目」，也算進合計，由使用者自己刪。所以改標題沒關係，但不要為了改字而大量改標題。
+- 記帳匯出：Excel 是瀏覽器端自己組 .xlsx（`ledXlsx()`，不靠外部程式庫，含 SUMIF 合計公式）；PDF 是 `ledPrint()` 產生 `#ledprint` 列印版面後呼叫列印，使用者選「儲存為 PDF」。
 
 ## 瀏覽器端儲存
 
-- localStorage 前綴 `twc26:`：spots、todo、todoOpen、pack、packOpen、packCustom（`{類別索引:[{id,n}]}`）、day、group、theme
+- localStorage 前綴 `twc26:`：spots、todo、todoOpen、pack、packOpen、packCustom（`{類別索引:[{id,n}]}`）、packHidden、day、group、theme；記帳：ledger（`{項目id:{a:金額,c:幣別}}`）、ledgerHidden、ledgerCustom（`{區塊id:[{id,n}]}`，自訂項目的 id 存成 `"c"+id`）、ledgerRate、ledgerOpen
 - IndexedDB `twc26` / `photos`：使用者拍的照片（只存在該裝置）
 
 ## 慣例
