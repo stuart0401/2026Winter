@@ -642,3 +642,47 @@ def ledger():
         "攤開的記帳本、收據、筆、紙鈔和日圓硬幣")
 
 ALL.update({"ledger": ledger})
+
+def tokyotower():
+    # dusk sky, Tokyo Tower in the middle, low buildings and trees at its feet
+    def hw(y):  # half width of the tower at height y (svg y grows downward)
+        pts = [(18, 1.2), (56, 5.5), (98, 13), (132, 24), (166, 40)]
+        for (y0, w0), (y1, w1) in zip(pts, pts[1:]):
+            if y0 <= y <= y1:
+                t = (y - y0) / (y1 - y0); return w0 + (w1 - w0) * (t ** 1.15)
+        return pts[-1][1]
+    cx = 160
+    ys = list(range(18, 167, 4)) + [166]
+    outline = ' '.join(f'L{cx - hw(y):.1f} {y}' for y in ys)
+    outline = f'M{cx} 12 ' + outline + ' ' + ' '.join(f'L{cx + hw(y):.1f} {y}' for y in reversed(ys)) + 'Z'
+    bands = ''
+    for y0, y1 in ((118, 126), (74, 80), (40, 44)):
+        bands += (f'<path class="f-cloud" d="M{cx-hw(y0):.1f} {y0} L{cx+hw(y0):.1f} {y0} L{cx+hw(y1):.1f} {y1} L{cx-hw(y1):.1f} {y1}Z"></path>')
+    lattice = ''
+    for y in range(26, 160, 10):
+        a, b = cx - hw(y), cx + hw(y); a2, b2 = cx - hw(y + 10), cx + hw(y + 10)
+        lattice += f'<path class="ol xthin" d="M{a:.1f} {y} L{b2:.1f} {y+10} M{b:.1f} {y} L{a2:.1f} {y+10}"></path>'
+    deck = (f'<rect class="f-cloud" x="{cx-19}" y="92" width="38" height="12" rx="2"></rect>'
+            + ''.join(f'<rect class="f-glow" x="{cx-16+i*6.5}" y="95" width="4" height="5" rx="1"></rect>' for i in range(5))
+            + f'<rect class="ol thin" x="{cx-19}" y="92" width="38" height="12" rx="2"></rect>'
+            + f'<rect class="f-cloud" x="{cx-8}" y="50" width="16" height="7" rx="2"></rect><rect class="f-glow" x="{cx-5}" y="52" width="10" height="3" rx="1"></rect><rect class="ol thin" x="{cx-8}" y="50" width="16" height="7" rx="2"></rect>')
+    arch = f'<path class="f-sky2" d="M{cx-24} 166 Q{cx} 128 {cx+24} 166Z"></path><path class="ol thin" d="M{cx-24} 166 Q{cx} 128 {cx+24} 166"></path>'
+    blds = ''
+    for x, w, h, c in [(-6, 34, 44, "f-stone2"), (30, 26, 30, "f-stone"), (58, 30, 52, "f-blue"), (226, 28, 40, "f-stone"), (256, 34, 58, "f-stone2"), (292, 34, 34, "f-brick")]:
+        blds += f'<rect class="{c}" x="{x}" y="{166-h}" width="{w}" height="{h}"></rect>'
+        blds += ''.join(win(x + 5 + i * 9, 166 - h + 7 + j * 12, 4, 5) for j in range(max(1, (h - 12) // 12)) for i in range(max(1, (w - 6) // 9)))
+        blds += f'<rect class="ol thin" x="{x}" y="{166-h}" width="{w}" height="{h}"></rect>'
+    return svg(sky()
+        + '<rect class="f-pink" x="-10" y="70" width="340" height="100" opacity="0.55"></rect><rect class="f-sun" x="-10" y="120" width="340" height="50" opacity="0.35"></rect>'
+        + '<circle class="f-sun" cx="262" cy="112" r="18"></circle><circle class="ol thin" cx="262" cy="112" r="18"></circle>'
+        + cloud(18, 24, 0.7) + cloud(218, 30, 0.55)
+        + blds
+        + f'<path class="f-red" d="{outline}"></path>'
+        + '<path class="sh" d="M' + ' L'.join(f'{cx + hw(y):.1f} {y}' for y in ys) + ' L' + ' L'.join(f'{cx + hw(y)*0.35:.1f} {y}' for y in reversed(ys)) + 'Z"></path>'
+        + bands + lattice + deck + arch
+        + f'<path class="ol" d="{outline}"></path><path class="ol thin" d="M{cx} 4 V14"></path>'
+        + tree(104, 150, 0.7, "f-green") + tree(214, 152, 0.65, "f-leaf") + tree(124, 156, 0.5, "f-leaf")
+        + '<rect class="f-ground" x="-10" y="164" width="340" height="46"></rect><path class="ol thin" d="M-10 164 H330"></path>',
+        "傍晚的東京鐵塔，腳下是小樓房和樹")
+
+ALL.update({"tokyotower": tokyotower})

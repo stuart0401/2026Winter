@@ -484,7 +484,11 @@ const GICON = {
   A:`<svg viewBox="0 0 24 24" aria-hidden="true" class="gico"><path d="M3.2 13.6c-.9-3.6.6-8.4 4.4-9.4 2.6-.7 4.4.6 5.2 2.3l1.2 2.7c.5 1.1 1.7 1.4 2.6.8l1.4-.9c1.2-.8 2.9.4 2.3 1.8l-2.6 6.2c-1 2.4-3.4 4-6.2 3.8-4-.3-7.4-3.3-8.3-7.3z" fill="#C98A4B" stroke="#2B2420" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 8.4c.8-1 1.6-1.4 2.6-1.5M5.4 11.2c1-.9 2.3-1.3 3.6-1.1" fill="none" stroke="#2B2420" stroke-width="1.1" stroke-linecap="round"/><circle cx="13.2" cy="14.6" r="4.4" fill="#FFFDF7" stroke="#2B2420" stroke-width="1.4"/><path d="M10.4 12.2c1 1.4 1 3.4 0 4.8M16 12.2c-1 1.4-1 3.4 0 4.8" fill="none" stroke="#D45F3A" stroke-width="1.1" stroke-linecap="round"/></svg>`,
   B:`<svg viewBox="0 0 24 24" aria-hidden="true" class="gico"><g fill="#FFFDF7" stroke="#2B2420" stroke-width="1.4"><circle cx="5.2" cy="10.4" r="2.8"/><path d="M1 21.2c0-3.4 1.9-5.4 4.2-5.4s4.2 2 4.2 5.4z"/><circle cx="18.8" cy="10.4" r="2.8"/><path d="M14.6 21.2c0-3.4 1.9-5.4 4.2-5.4s4.2 2 4.2 5.4z"/><circle cx="12" cy="7.4" r="3.2"/><path d="M7 21.2c0-4.2 2.2-7.2 5-7.2s5 3 5 7.2z"/></g></svg>`
 };
-const gBadge = g => `<span class="gbadge" data-g="${g}">${GICON[g]}</span>`;
+GICON.cap = `<svg viewBox="0 0 24 24" aria-hidden="true" class="gico"><path d="M1.6 9.4 12 4.6l10.4 4.8L12 14.2z" fill="#3B312B" stroke="#2B2420" stroke-width="1.3" stroke-linejoin="round"/><path d="M6 11.6v4.6c0 1.4 2.7 2.8 6 2.8s6-1.4 6-2.8v-4.6L12 14.2z" fill="#FFFDF7" stroke="#2B2420" stroke-width="1.3" stroke-linejoin="round"/><path d="M20 10.2v5.6" fill="none" stroke="#D45F3A" stroke-width="1.4" stroke-linecap="round"/><circle cx="20" cy="16.6" r="1.2" fill="#D45F3A"/></svg>`;
+GICON.cup = `<svg viewBox="0 0 24 24" aria-hidden="true" class="gico"><path d="M4 10h12v5.2c0 2.8-2.4 4.8-6 4.8s-6-2-6-4.8z" fill="#FFFDF7" stroke="#2B2420" stroke-width="1.4" stroke-linejoin="round"/><path d="M16 11.4h1.6a2.4 2.4 0 0 1 0 4.8H15.6" fill="none" stroke="#2B2420" stroke-width="1.4"/><path d="M3 21h14" stroke="#2B2420" stroke-width="1.4" stroke-linecap="round"/><path d="M8 3.6c-1 1.2 1 2 0 3.4M11.6 3.6c-1 1.2 1 2 0 3.4" fill="none" stroke="#C98A4B" stroke-width="1.3" stroke-linecap="round"/></svg>`;
+const gName = (d, g) => (d && d.gnames && d.gnames[g]) || GNAME[g];
+const gIcon = (d, g) => GICON[(d && d.gicons && d.gicons[g]) || g];
+const gBadge = (g, d) => `<span class="gbadge" data-g="${g}">${gIcon(d, g)}</span>`;
 const tagH = (t, k) => `<span class="tag ${k||""}">${esc(t)}</span>`;
 const CHECK = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
 
@@ -502,11 +506,9 @@ const DAYS = [
       {t:"15:52", title:"京成 Access 特急 → 東銀座", note:"直通淺草線免轉車。Google 地圖查 12/13（日）班次：15:52 發車、17:16 到東銀座，東銀座站步行到飯店約 10 分鐘。出發前再查一次。", m:"train"},
       {t:"17:30", title:"TOSEI酒店 check-in", note:"可可尼築地銀座，之後 12/15–12/18 也住這裡。", art:"ginza"}
     ]},
-    B:{name:"直接到飯店", items:[
-      {t:"14:40", alt:true, title:"機場 → 飯店", led:{d:"京成 Access，或機場接送專車（約 22,000 日圓／趟，待議）"}, opts:[
-        {tag:"A", m:"train", title:"京成 Access 特急 → 東銀座，步行到飯店", note:"直通淺草線免轉車，約 1.5 小時；東銀座站步行到飯店約 10 分鐘。出發前查班次。", q:"東銀座駅", ql:"東銀座站"},
-        {tag:"B", m:"car", title:"機場接送（專車）直達飯店", note:"Google 地圖模擬 12/13（日）14:40 出發：車程約 50 分–1 小時 15 分，約 16:00 前後抵達。行李多、人多時最省力；請提前預約。", dir:"https://www.google.com/maps/dir/%E6%88%90%E7%94%B0%E5%9B%BD%E9%9A%9B%E7%A9%BA%E6%B8%AF+%E7%AC%AC2%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/35.6639906,139.7716542/data=!4m6!4m5!2m3!6e0!7e2!8j1797172800!3e0", ql:"機場到飯店的車程"}]},
-      {t:"16:30", title:"TOSEI酒店 check-in", note:"可可尼築地銀座，之後 12/15–12/18 也住這裡。搭接送的話會早一點到。", art:"ginza"}
+    B:{name:"機場接送 → 飯店", items:[
+      {t:"14:40", title:"機場接送（專車）→ 飯店", note:"10 人座、中文司機，請提前預約。Google 地圖模擬 12/13（日）14:40 出發：車程約 50 分–1 小時 15 分，約 16:00 前後抵達。", m:"car", dir:"https://www.google.com/maps/dir/%E6%88%90%E7%94%B0%E5%9B%BD%E9%9A%9B%E7%A9%BA%E6%B8%AF+%E7%AC%AC2%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/35.6639906,139.7716542/data=!4m6!4m5!2m3!6e0!7e2!8j1797172800!3e0", ql:"機場到飯店的車程", led:{d:"10 人座、中文司機，約 22,000 日圓／趟"}},
+      {t:"16:00", title:"TOSEI酒店 check-in", note:"可可尼築地銀座，之後 12/15–12/18 也住這裡。", art:"ginza"}
     ]}
    },
    post:[
@@ -546,34 +548,47 @@ const DAYS = [
     {t:"17:15", title:"東京車站", led:"東京車站 伴手禮", note:"站內商店街、買伴手禮。", art:"tokyostation", spot:true, shop:"tokyo"},
     {t:"晚上", title:"回 TOSEI", note:"取回寄放行李、重新 check-in", m:"bed"}
    ]},
-  {id:"d4", date:"16", wd:"三", title:"分組日", sub:"大邱組 入管局・東京車站・澀谷／三口組 明治神宮・中目黑", art:"d_split", seal:"b", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"18:00 兩組在澀谷會合吃晚餐",
+  {id:"d4", date:"16", wd:"三", title:"分組日", sub:"大邱組 東京車站・澀谷／三口組 明治神宮・原宿・代官山；晚上中目黑會合", art:"d_split", seal:"b", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"18:00 兩組在中目黑會合吃晚餐",
    groups:{
-    A:{name:"入管局 → 澀谷", items:[
-      {t:"07:30", title:"出發 → JR 品川站港南口", note:"淺草線往品川一帶，約 30 分鐘", m:"train"},
-      {t:"08:15", title:"都巴士「品99」", note:"在「東京出入国在留管理局前」下車，下車就在門口", m:"bus"},
-      {t:"08:30", title:"東京出入國在留管理局", led:false, note:"開門前排隊、辦理手續。受理時間平日 9:00–16:00，越早到越好。", art:"immigration", spot:true},
-      {t:"辦完後", title:"回品川站 → JR 到東京車站", note:"品川站搭 JR 山手線或京濱東北線，約 10 分鐘", m:"train"},
+    A:{name:"東京車站 → 澀谷", items:[
+      {t:"上午", title:"上午自由活動", note:"行程待定。", m:"walk"},
+      {t:"11:30", title:"前往東京車站", note:"從飯店過去不遠，出發前用 Google 地圖查路線。", m:"train"},
       {t:"12:00", title:"與日文老師午餐有約", note:"在東京車站一帶。", m:"bowl"},
       {t:"13:30", title:"JR 山手線到澀谷", note:"東京車站到澀谷約 25 分鐘", m:"train"},
       {t:"14:00", title:"Coffee & Cake SHU Premium Shibuya-Ekimae", note:"下午茶休息一下。", art:"cake", spot:true},
-      {t:"接著", title:"Tower Records 澀谷店", note:"澀谷站八公口步行約 5 分鐘。營業約 11:00–22:00，晚到也逛得到。", art:"records", spot:true},
-      {t:"18:00", title:"在澀谷與三口組會合吃晚餐", led:{n:"澀谷晚餐", d:"兩組會合", all:true}, note:"", m:"bowl"}
+      {t:"接著", title:"Tower Records 澀谷店", note:"澀谷站八公口步行約 5 分鐘。營業約 11:00–22:00。", art:"records", spot:true, shop:"shibuya"},
+      {t:"17:30", title:"東急東橫線 澀谷 → 中目黑", note:"一站就到（班次暫供參考，出發前用 Google 地圖查）。", m:"train"}
     ]},
-    B:{name:"明治神宮 → 中目黑", note:"三口組不用去入管局、SHU 和 Tower Records。", items:[
+    B:{name:"明治神宮 → 原宿 → 代官山", items:[
       {t:"08:30", title:"出發 → 原宿", note:"", m:"train"},
       {t:"09:15", title:"明治神宮", note:"12 月開門 6:40、16:00 關門；御朱印、御守 9:00 起。", art:"torii", spot:true},
-      {t:"11:00", title:"表參道／原宿逛街、午餐", note:"", m:"walk", shop:"harajuku"},
-      {t:"14:00", title:"星巴克臻選® 東京烘焙工坊", note:"中目黑。營業 7:00–22:00；中目黑站步行約 14 分鐘。", art:"roastery", spot:true},
-      {t:"16:30", title:"中目黑／代官山自由逛", note:"", m:"walk", shop:"nakameguro"},
-      {t:"18:00", title:"到澀谷與大邱組會合", led:"東急東橫線 中目黑 → 澀谷", note:"中目黑到澀谷搭東急東橫線一站", m:"bowl", shop:"shibuya"}
+      {t:"11:30", title:"原宿午餐", note:"表參道／原宿一帶吃午餐，順便逛逛。", m:"bowl", shop:"harajuku"},
+      {t:"13:30", title:"前往代官山", note:"原宿站搭 JR 山手線到澀谷，轉東急東橫線到代官山（出發前用 Google 地圖查班次）。", m:"train"},
+      {t:"14:00", title:"代官山逛街", note:"", m:"walk"},
+      {t:"16:30", title:"星巴克臻選® 東京烘焙工坊", note:"在中目黑，營業 7:00–22:00；中目黑站步行約 14 分鐘。逛完代官山過來，喝杯咖啡再去吃晚餐。", art:"roastery", spot:true}
     ]}
-   }},
-  {id:"d5", date:"17", wd:"四", title:"東京大學＋teamLab", sub:"本鄉校區、麻布台Hills", art:"d_ginkgo", seal:"", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"日比谷線從神谷町可直達築地",
-   items:[
-    {t:"09:30", title:"東京大學本鄉校區", led:false, note:"搭地鐵到本鄉三丁目或東大前。看赤門、安田講堂、三四郎池。", art:"todai", spot:true},
-    {t:"12:00", title:"本鄉一帶午餐", note:"", m:"bowl"},
-    {t:"14:00", title:"teamLab Borderless", led:{n:"teamLab Borderless 門票", d:"成人 3,800 日圓起，指定時段票"}, note:"麻布台Hills，神谷町站 5 號出口直通（日比谷線從築地可直達）。10:00–21:00，最後入場 20:00；成人 3,800 日圓起。請先上網買指定時段票。", art:"teamlab", spot:true},
-    {t:"傍晚", title:"晚餐", note:"在麻布台Hills 吃，或回銀座", m:"bowl"}
+   },
+   post:[
+    {t:"18:00", title:"中目黑晚餐", note:"兩組在中目黑會合吃晚餐。", m:"bowl", shop:"nakameguro"}
+   ]},
+  {id:"d5", date:"17", wd:"四", title:"分組＋teamLab＋東京鐵塔", sub:"邱博組 東京大學／悠閒組 銀座散步；下午 teamLab 會合、傍晚東京鐵塔", art:"d_ginkgo", seal:"", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"回程：神谷町站搭日比谷線可直達築地",
+   gnames:{A:"邱博組", B:"悠閒組"}, gicons:{A:"cap", B:"cup"},
+   groups:{
+    A:{name:"東京大學 → 麻布台", items:[
+      {t:"09:30", title:"東京大學本鄉校區", led:false, note:"搭地鐵到本鄉三丁目或東大前。看赤門、安田講堂、三四郎池。", art:"todai", spot:true},
+      {t:"12:00", title:"午餐（自行解決）", note:"本鄉一帶。", m:"bowl"},
+      {t:"13:30", title:"南北線 東大前 → 六本木一丁目", note:"直達不用換車；六本木一丁目站步行約 4 分鐘到麻布台Hills（班次暫供參考，出發前用 Google 地圖查）。", m:"train"}
+    ]},
+    B:{name:"銀座散步", items:[
+      {t:"10:00", title:"銀座散步", note:"從飯店走過去就到，慢慢逛中央通、銀座四丁目一帶。", art:"ginza"},
+      {t:"12:00", title:"銀座午餐", note:"", m:"bowl"},
+      {t:"13:30", title:"日比谷線 銀座 → 神谷町", note:"直達不用換車；神谷町站 5 號出口直通麻布台Hills（班次暫供參考，出發前用 Google 地圖查）。", m:"train"}
+    ]}
+   },
+   post:[
+    {t:"14:00", title:"teamLab Borderless", led:{n:"teamLab Borderless 門票", d:"成人 3,800 日圓起，指定時段票"}, note:"兩組在這裡會合。麻布台Hills，10:00–21:00，最後入場 20:00；成人 3,800 日圓起。請先上網買指定時段票。", art:"teamlab", spot:true},
+    {t:"傍晚", title:"東京鐵塔", led:{n:"東京鐵塔 展望台"}, note:"從麻布台Hills 步行約 15 分鐘（暫供參考，以 Google 地圖為準）。營業 9:00–23:00（暫供參考），傍晚上展望台看夕陽和夜景。", art:"tokyotower", spot:true},
+    {t:"晚上", title:"東京鐵塔一帶晚餐", note:"", m:"bowl"}
    ]},
   {id:"d6", date:"18", wd:"五", title:"彈性及購物日", sub:"行程待定", art:"d_shopping", seal:"", stay:"TOSEI酒店 可可尼築地銀座", stayArt:"ginza", stayNote:"最後一晚，可先整理行李",
    items:[
@@ -586,10 +601,8 @@ const DAYS = [
   {id:"d7", date:"19", wd:"六", title:"返程", sub:"成田第 2 航廈 → 台中", art:"d_home", seal:"", stay:"", stayArt:"", stayNote:"",
    items:[
     {t:"09:30", title:"飯店 check-out", note:"", m:"bag"},
-    {t:"09:30", alt:true, title:"飯店 → 機場", led:{d:"京成 Access，或機場接送專車"}, opts:[
-      {tag:"A", m:"train", title:"京成 Access 特急 → 成田第 2 航廈", note:"10:15 左右從東銀座搭車（飯店步行約 10 分鐘），到成田第 2 航廈約 1.5 小時。", q:"東銀座駅", ql:"東銀座站"},
-      {tag:"B", m:"car", title:"機場接送（專車）飯店直達成田第 2 航廈", note:"Google 地圖模擬 12/19（六）09:30 出發：車程約 50 分–1 小時 15 分，約 10:45 前後抵達。請提前預約。", dir:"https://www.google.com/maps/dir/35.6639906,139.7716542/%E6%88%90%E7%94%B0%E5%9B%BD%E9%9A%9B%E7%A9%BA%E6%B8%AF+%E7%AC%AC2%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/data=!4m6!4m5!2m3!6e0!7e2!8j1797672600!3e0", ql:"飯店到機場的車程"}]},
-    {t:"12:00", title:"抵達成田第 2 航廈、報到", note:"建議起飛前 2 小時到", m:"plane"},
+    {t:"09:30", title:"機場接送（專車）→ 成田第 2 航廈", note:"10 人座、中文司機，請提前預約。Google 地圖模擬 12/19（六）09:30 出發：車程約 50 分–1 小時 15 分，約 10:45 前後抵達。", m:"car", dir:"https://www.google.com/maps/dir/35.6639906,139.7716542/%E6%88%90%E7%94%B0%E5%9B%BD%E9%9A%9B%E7%A9%BA%E6%B8%AF+%E7%AC%AC2%E3%82%BF%E3%83%BC%E3%83%9F%E3%83%8A%E3%83%AB/data=!4m6!4m5!2m3!6e0!7e2!8j1797672600!3e0", ql:"飯店到機場的車程", led:{d:"10 人座、中文司機，約 22,000 日圓／趟"}},
+    {t:"10:45", title:"抵達成田第 2 航廈、報到", note:"車程順利的話 10:45 前後抵達；建議起飛前 2 小時到。", m:"plane"},
     {t:"14:25", title:"JX315 成田第 2 航廈起飛", note:"", m:"plane"},
     {t:"17:55", title:"抵達台中", note:"辛苦了！", m:"home"}
    ]}
@@ -605,30 +618,29 @@ const SPOTS = [
   {n:"輕井澤英迪格酒店", d:"12/14 住宿", art:"firepit", days:["d2","d3"], ord:0.5},
   {n:"明治神宮", d:"12/16（三口組）", art:"torii", days:["d4"]},
   {n:"星巴克臻選® 東京烘焙工坊", d:"12/16（三口組）", art:"roastery", days:["d4"]},
-  {n:"東京出入國在留管理局", d:"12/16（大邱組）", art:"immigration", days:["d4"]},
+  {n:"東京出入國在留管理局", d:"12/16（大邱組）", art:"immigration", days:["d4"], gone:true},
   {n:"Coffee & Cake SHU Premium Shibuya-Ekimae", d:"12/16（大邱組）", art:"cake", days:["d4"]},
   {n:"Tower Records 澀谷店", d:"12/16（大邱組）", art:"records", days:["d4"]},
-  {n:"東京大學", d:"12/17", art:"todai", days:["d5"]},
-  {n:"teamLab Borderless", d:"12/17", art:"teamlab", days:["d5"]},
+  {n:"東京大學", d:"12/17（邱博組）", art:"todai", days:["d5"]},
+  {n:"teamLab Borderless", d:"12/17 下午（兩組會合）", art:"teamlab", days:["d5"]},
   {n:"銀座 伊東屋 本店", d:"12/18（12/13 選配）", art:"stationery", days:["d6","d1"]},
   {n:"TOSEI酒店 可可尼築地銀座", d:"12/13、12/15–12/18 住宿", art:"ginza", days:["d1"]},
   {n:"森之教堂", d:"12/15（週二公休，外觀拍照）", art:"forestchapel", days:["d3"], ord:3.5},
   {n:"輕井澤新藝術博物館", d:"12/15", art:"artmuseum", days:["d3"], ord:3.6},
   {n:"noix de beurre 銀座三越店", d:"12/18", art:"financier", days:["d6"], ord:14.5},
-  {n:"ASICS Walking 銀座インズ店", d:"12/18", art:"walkshoes", days:["d6"], ord:14.4}
+  {n:"ASICS Walking 銀座インズ店", d:"12/18", art:"walkshoes", days:["d6"], ord:14.4},
+  {n:"東京鐵塔", d:"12/17 傍晚", art:"tokyotower", days:["d5"], ord:14.2}
 ];
 const LIVE = SPOTS.map((s,i)=>({s,i})).filter(o=>!o.s.gone).sort((a,b)=>(a.s.ord??a.i)-(b.s.ord??b.i));
 const spotsDone = () => { const st = store.get("spots",{}); return LIVE.filter(o=>st[o.i]).length; };
 const TODO = [
   {name:"待議", hint:"還沒決定、需要大家討論。決定了就打勾。", items:[
-    {id:"pickup", n:"12/13、12/19 是否預約成田機場接送", d:"10 人座、中文司機，約 22,000 日圓／趟。"},
-    {id:"meet", n:"12/16 晚上在澀谷會合，還是改在原宿或中目黑／代官山", d:"考量澀谷站周邊太大，車站和人潮對二老不友善。"},
-    {id:"split13", n:"12/13 是否分組行動", d:"大邱組可在先入境時完成 JTTP 二次審查，兩組分開前往飯店"}]},
+  ]},
   {name:"待辦", hint:"出發前要處理的事。辦好就打勾。", items:[
     {id:"ticket", n:"確認電子機票時間", d:"冬季班表：JX314 09:15→13:25、JX315 14:25→17:55"},
+    {id:"pickup-nrt", n:"預約 12/13、12/19 成田機場接送", d:"10 人座、中文司機，約 22,000 日圓／趟"},
     {id:"pickup-tw", n:"預約大邱及錦祥街機場接送", d:"兩地分開搭車前往"},
     {id:"teamlab", n:"買 teamLab Borderless 門票", d:"12/17 下午入場，指定時段票"},
-    {id:"imm", n:"確認入管局能否線上預約", d:"大邱組 12/16"},
     {id:"candle", n:"登錄高原教會燭光夜", d:"12/14 不用抽選，但要事前登錄；11/27（五）13:00 開放", opt:"選配"}]}
 ];
 const TODO_TOTAL = TODO.reduce((n,c)=>n+c.items.length,0);
@@ -680,7 +692,7 @@ function ledFromItem(d, it, g){
   const x = (o && typeof o==="object") ? o : {};
   return {id:`${d.id}:${it.title}`, n: typeof o==="string" ? o : (x.n || it.title),
     d: [it.t && /\d/.test(it.t) ? it.t : "", x.d || (it.opt && !x.d ? it.opt : "")].filter(Boolean).join("・"),
-    c: x.c, a: x.a, g: x.all ? null : g};
+    c: x.c, a: x.a, g: x.all ? null : g, gn: (g && !x.all) ? gName(d, g) : null};
 }
 function ledFlights(){
   const out=[];
@@ -778,10 +790,14 @@ const MAPQ = {
   "在澀谷與三口組會合吃晚餐":"渋谷駅", "出發 → 原宿":"原宿駅", "明治神宮":"明治神宮", "表參道／原宿逛街、午餐":"表参道",
   "星巴克臻選® 東京烘焙工坊":"スターバックス リザーブ ロースタリー 東京", "中目黑／代官山自由逛":"中目黒駅", "到澀谷與大邱組會合":"渋谷駅",
   "東京大學本鄉校區":"東京大学 本郷キャンパス 赤門", "本鄉一帶午餐":"本郷三丁目駅", "teamLab Borderless":"チームラボボーダレス 麻布台ヒルズ", "晚餐":"麻布台ヒルズ",
-  "補 12/16 沒去的地方":"明治神宮", "銀座伊東屋本店":"銀座 伊東屋 本店", "銀座晚餐":"銀座", "京成 Access 特急 → 成田":"東銀座駅", "抵達成田第 2 航廈、報到":"成田国際空港 第2ターミナル", "午餐":"旧軽井沢銀座通り", "飯店 check-out":"TOSEIホテル ココネ築地銀座", "JX315 成田第 2 航廈起飛":"成田国際空港 第2ターミナル", "抵達台中":"台中國際機場", "JX314 台中起飛":"台中國際機場"
+  "補 12/16 沒去的地方":"明治神宮", "銀座伊東屋本店":"銀座 伊東屋 本店", "銀座晚餐":"銀座", "京成 Access 特急 → 成田":"東銀座駅", "抵達成田第 2 航廈、報到":"成田国際空港 第2ターミナル", "午餐":"旧軽井沢銀座通り", "飯店 check-out":"TOSEIホテル ココネ築地銀座", "JX315 成田第 2 航廈起飛":"成田国際空港 第2ターミナル", "抵達台中":"台中國際機場", "JX314 台中起飛":"台中國際機場",
+  "機場接送（專車）→ 飯店":"TOSEIホテル ココネ築地銀座", "機場接送（專車）→ 成田第 2 航廈":"成田国際空港 第2ターミナル",
+  "前往東京車站":"東京駅", "東急東橫線 澀谷 → 中目黑":"中目黒駅", "中目黑晚餐":"中目黒駅", "原宿午餐":"原宿駅", "前往代官山":"代官山駅", "代官山逛街":"代官山駅",
+  "午餐（自行解決）":"本郷三丁目駅", "南北線 東大前 → 六本木一丁目":"東大前駅", "銀座散步":"銀座四丁目交差点", "銀座午餐":"銀座",
+  "日比谷線 銀座 → 神谷町":"銀座駅", "東京鐵塔":"東京タワー", "東京鐵塔一帶晚餐":"東京タワー"
 };
 const SPOTQ = ["東京駅 丸の内駅舎","APPLE PIE lab 軽井沢","ブランジェ浅野屋 軽井沢旧道本店","旧軽井沢銀座通り","石の教会 内村鑑三記念堂","軽井沢高原教会","ハルニレテラス","ホテルインディゴ軽井沢",
-  "明治神宮","スターバックス リザーブ ロースタリー 東京","東京出入国在留管理局","Coffee & Cake SHU Premium Shibuya-Ekimae","タワーレコード渋谷店","東京大学 本郷キャンパス","チームラボボーダレス 麻布台ヒルズ","銀座 伊東屋 本店","TOSEIホテル ココネ築地銀座","森のチャペル 軽井沢礼拝堂","Karuizawa New Art Museum","ノワ・ドゥ・ブール 銀座三越店","アシックスウォーキング 銀座インズ"];
+  "明治神宮","スターバックス リザーブ ロースタリー 東京","東京出入国在留管理局","Coffee & Cake SHU Premium Shibuya-Ekimae","タワーレコード渋谷店","東京大学 本郷キャンパス","チームラボボーダレス 麻布台ヒルズ","銀座 伊東屋 本店","TOSEIホテル ココネ築地銀座","森のチャペル 軽井沢礼拝堂","Karuizawa New Art Museum","ノワ・ドゥ・ブール 銀座三越店","アシックスウォーキング 銀座インズ","東京タワー"];
 const mapUrl = q => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
 const mapLink = (q, name) => `<a class="go-map" href="${mapUrl(q)}" target="_blank" rel="noopener" aria-label="在 Google 地圖開啟：${esc(name)}（另開新視窗）">${ico("map")}在 Google 地圖開啟${ico("ext")}</a>`;
 const NEAR = {
@@ -803,7 +819,7 @@ const SHOP = {
     {k:"UNIQLO", n:"UNIQLO 原宿店", w:"原宿站步行 1 分", h:"11:00–21:00", q:"ユニクロ 原宿店"},
     {k:"MUJI", n:"Found MUJI 青山", w:"表參道站步行 3 分", h:"12:00–20:00", q:"無印良品 青山"},
     {k:"3COINS", n:"3COINS 原宿旗艦店", w:"原宿站步行 7 分", h:"11:00–20:00", q:"3COINS 原宿本店"}],
-    note:"這一帶沒有唐吉訶德和 Standard Products；唐吉訶德可以留到下午中目黑或晚上澀谷。"},
+    note:"這一帶沒有唐吉訶德和 Standard Products；唐吉訶德可以留到傍晚在中目黑逛。"},
   nakameguro: {sub:"中目黑・代官山", stores:[
     {k:"唐吉訶德", n:"唐吉訶德 中目黑本店", w:"星巴克烘焙工坊步行 1 分", h:"24 小時", q:"ドン・キホーテ 中目黒本店"},
     {k:"MUJI", n:"無印良品 代官山", w:"中目黑站步行 11 分", h:"11:00–19:00", q:"無印良品 代官山"}],
@@ -871,7 +887,8 @@ function itemHTML(it, grp){
   const cls = it.m ? "move" : (it.opt ? "opt" : (grp ? "g"+grp.toLowerCase() : ""));
   let inner;
   if(it.m){
-    inner = `<div class="mv"><div class="mv-row"><span class="ib">${ico(it.m)}</span><div><strong>${esc(it.title)}</strong>${it.note?`<small>${esc(it.note)}</small>`:""}${q?mapLink(q,it.title):""}</div></div>${it.shop?shopHTML(it.shop):""}</div>`;
+    const lk = it.dir ? `<a class="go-map" href="${it.dir}" target="_blank" rel="noopener" aria-label="Google 地圖車程：${esc(it.ql||it.title)}（另開新視窗）">${ico("map")}Google 地圖車程${ico("ext")}</a>` : (q?mapLink(q,it.title):"");
+    inner = `<div class="mv"><div class="mv-row"><span class="ib">${ico(it.m)}</span><div><strong>${esc(it.title)}</strong>${it.note?`<small>${esc(it.note)}</small>`:""}${lk}</div></div>${it.shop?shopHTML(it.shop):""}</div>`;
   } else {
     const tags = (it.opt?tagH(it.opt,"opt"):"") + (it.group?tagH(GNAME[it.group], it.group.toLowerCase()):"");
     inner = `<article class="card stop${it.opt?" dashed":""}">${pic(it.art)}<div class="tx"><h3>${esc(it.title)}</h3>${it.note?`<p>${esc(it.note)}</p>`:""}${tags?`<div class="tags">${tags}</div>`:""}<div class="lk-row">${q?mapLink(q,it.title):""}${it.link?`<a class="go-map" href="${it.link.href}" target="_blank" rel="noopener" aria-label="${esc(it.link.label)}（另開新視窗）">${ico("ext")}${esc(it.link.label)}</a>`:""}</div>${it.extra?extraHTML(it.extra):""}</div>${it.shop?shopHTML(it.shop):""}</article>`;
@@ -952,9 +969,9 @@ function renderTrip(){
       ${d.stay?stayCard(d):""}
     </aside>`;
   if(d.groups){
-    const col = g => `<div class="gcol" data-g="${g}"><h2>${gBadge(g)}<span><span class="gname">${GNAME[g]}</span>${esc(d.groups[g].name)}</span></h2>
+    const col = g => `<div class="gcol" data-g="${g}"><h2>${gBadge(g, d)}<span><span class="gname">${gName(d, g)}</span>${esc(d.groups[g].name)}</span></h2>
       ${d.groups[g].note?`<p class="gnote">${esc(d.groups[g].note)}</p>`:""}${d.groups[g].items.map(it=>itemHTML(it,g)).join("")}</div>`;
-    const seg = `<div class="seg" role="group" aria-label="切換組別">${["A","B"].map(g=>`<button type="button" data-g="${g}" aria-pressed="${curGroup===g}">${GICON[g]}<span class="sg-t">${GNAME[g]}<small>${esc(d.groups[g].name)}</small></span></button>`).join("")}</div>`;
+    const seg = `<div class="seg" role="group" aria-label="切換組別">${["A","B"].map(g=>`<button type="button" data-g="${g}" aria-pressed="${curGroup===g}">${gIcon(d, g)}<span class="sg-t">${gName(d, g)}<small>${esc(d.groups[g].name)}</small></span></button>`).join("")}</div>`;
     const groups = `<div class="groups" data-show="${curGroup}">${col("A")}${col("B")}</div>`;
     if(d.pre || d.post){
       main = `<div class="daymain"><div class="timeline flow">${(d.pre||[]).map(it=>itemHTML(it)).join("")}
@@ -1175,7 +1192,7 @@ function renderPrep(){
   const st = store.get("todo",{});
   document.getElementById("view-prep").innerHTML = listHero("plane","待議及待辦","待議是還要討論決定的事，待辦是出發前要處理的事。",todoDone(),TODO_TOTAL)
     + `<div class="cats">${TODO.map((c,ci)=>{ const cd=c.items.filter(it=>st[it.id]).length;
-        const body = `<p class="cat-hint">${esc(c.hint)}</p><div class="checks one">${c.items.map(it=>{
+        const body = !c.items.length ? `<p class="cat-hint">目前沒有${esc(c.name)}事項。</p>` : `<p class="cat-hint">${esc(c.hint)}</p><div class="checks one">${c.items.map(it=>{
           const h = checkHTML("todo",it.id,it.n,it.d,null,st[it.id]);
           return it.opt ? h.replace('<span class="lb">','<span class="lb">'+tagH(it.opt,"opt")+' ') : h; }).join("")}</div>`;
         return catHTML("todo", ci, c.name, cd, c.items.length, !!todoOpen[ci], body); }).join("")}</div>
@@ -1205,7 +1222,7 @@ function renderPack(){
 let ledOpen = store.get("ledgerOpen", {0:true});
 const ledDom = id => { let h=2166136261; for(const ch of String(id)){ h^=ch.codePointAt(0); h=Math.imul(h,16777619)>>>0; } return "led-"+h.toString(36); };
 function ledRowHTML(it){
-  const g = it.g ? tagH(GNAME[it.g], it.g==="A"?"a":"b")+" " : "";
+  const g = it.g ? tagH(it.gn||GNAME[it.g], it.g==="A"?"a":"b")+" " : "";
   const v = it.amt==null ? "" : fmtNum(it.amt);
   return `<div class="led-row">
     <div class="led-nm"><span class="led-t">${g}${esc(it.n)}</span>${it.d?`<small>${esc(it.d)}</small>`:""}</div>
@@ -1288,7 +1305,7 @@ function ledXlsx(){
   rows.push([]);
   rows.push(["日期／分類","組別","項目","說明","金額","幣別"].map(t=>S(t,1)));
   const first = rows.length+1;
-  LEDGER.forEach((s,si)=>ledItems(si).forEach(it=>rows.push([ledSecName(s), it.g?GNAME[it.g]:"", it.n, it.d||"", it.amt==null?"":N(it.amt), LED_CUR[it.cur].lb])));
+  LEDGER.forEach((s,si)=>ledItems(si).forEach(it=>rows.push([ledSecName(s), it.g?(it.gn||GNAME[it.g]):"", it.n, it.d||"", it.amt==null?"":N(it.amt), LED_CUR[it.cur].lb])));
   const last = Math.max(rows.length, first), tot = ledSum(ledAll());
   rows.push([]);
   const rJ = rows.length+1; rows.push(["","",S("日圓合計",6),"",{f:`SUMIF(F${first}:F${last},"日圓",E${first}:E${last})`, v:tot.JPY, s:3},"日圓"]);
@@ -1344,7 +1361,7 @@ function ledPrintHTML(){
   const all=ledAll(), tot=ledSum(all), rate=ledRate(), stamp=ledStamp();
   const body = LEDGER.map((s,si)=>{ const its=ledItems(si); if(!its.length) return "";
     return `<tr class="lsec"><td colspan="2">${esc(ledSecName(s))}</td><td colspan="2" class="n">${esc(ledSubText(ledSum(its)).replace(/^小計 /,""))}</td></tr>`
-      + its.map(it=>`<tr><td>${it.g?esc(GNAME[it.g])+"・":""}${esc(it.n)}</td><td class="d">${esc(it.d||"")}</td><td>${LED_CUR[it.cur].lb}</td><td class="n">${it.amt==null?"":fmtNum(it.amt)}</td></tr>`).join(""); }).join("");
+      + its.map(it=>`<tr><td>${it.g?esc(it.gn||GNAME[it.g])+"・":""}${esc(it.n)}</td><td class="d">${esc(it.d||"")}</td><td>${LED_CUR[it.cur].lb}</td><td class="n">${it.amt==null?"":fmtNum(it.amt)}</td></tr>`).join(""); }).join("");
   return `<h1>2026 東京冬令營 記帳</h1><p class="meta">匯出時間：${stamp.text}</p>
     <table class="main"><colgroup><col style="width:34%"><col><col style="width:9%"><col style="width:17%"></colgroup><thead><tr><th>項目</th><th>說明</th><th>幣別</th><th class="n">金額</th></tr></thead><tbody>${body}</tbody></table>
     <table class="tot"><tr><th>日圓合計</th><td class="n">${fmtAmt(tot.JPY,"JPY")}</td></tr><tr><th>台幣合計</th><td class="n">${fmtAmt(tot.TWD,"TWD")}</td></tr>

@@ -53,9 +53,10 @@ python3 tests/check.py [檔案]          # 預設檢查 ./index.html，印出「
   - 一般日：`items:[…]`
   - 全天分組（12/16）：`groups:{A:{name, note?, items}, B:{…}}`
   - 部分分組（12/13）：`pre:[…]`（兩組一起）＋ `groups` ＋ `post:[…]`（會合後）
+  - 分組日的組名預設是 GNAME（A 大邱組、B 三口組）。某天要用別的組名時，在那天加 `gnames:{A:"邱博組",B:"悠閒組"}`，圖示用 `gicons:{A:"cap",B:"cup"}`（GICON 裡的鍵）。記帳的組別標籤會自動跟著用當天組名。
 - **行程項目的種類**：
   - 卡片：`{t, title, note, art, spot?, opt?:"選配", link?, extra?, shop?}`
-  - 移動列：`{t, title, note, m:"train|bus|car|taxi|walk|plane|bowl|bag…", shop?}`
+  - 移動列：`{t, title, note, m:"train|bus|car|taxi|walk|plane|bowl|bag…", shop?, dir?, ql?}`；有 `dir`（Google 地圖路線網址）時地圖按鈕改成「Google 地圖車程」
   - 交通二選一：`{t, alt:true, title, opts:[{tag, m, title, note, q 或 dir, ql}]}`
   - 英迪格接駁車：`{t, sh:"to"|"from", title, note}`
 - **MAPQ**：行程標題 → Google 地圖搜尋字串。地圖按鈕靠標題對應，改標題時記得同步改這裡。
